@@ -37,7 +37,7 @@ func RssFeed() (err error) {
 
 	// XXX: Bad performance random sort is no problem.
 	//		Because less than 10 thousand blogs target.
-	blogs = blog.WhightChoiceBlogs(blogs, 100)
+	blogs = blog.WhightChoiceBlogs(blogs, 60)
 	shuffle := shuffler.Shuffler(blogs).(reflect.Value)
 
 	for i := 0; i < shuffle.Len(); i++ {
