@@ -134,7 +134,7 @@ func (c *EntriesController) Show() {
 		}
 	}
 	if len(in) <= 0 {
-		in = append(in, "巨乳", "エロ")
+		in = append(in, "巨乳")
 	}
 
 	// models.Summaries().RelatedSel().
@@ -150,7 +150,7 @@ func (c *EntriesController) Show() {
 	LEFT OUTER JOIN entry_tag et ON et.entry_id = e.id 
 	LEFT OUTER JOIN tag tag ON tag.id = et.tag_id 
 	WHERE (tag.name IN (%s) OR e.q like '%%%s%%') AND e.id != '%d'
-	ORDER BY s.sort DESC LIMIT 15`, names, names[0], s.Id)
+	ORDER BY s.sort DESC LIMIT 4`, names, names[0], s.Id)
 	orm.NewOrm().Raw(q).QueryRows(&summaries)
 
 	c.Data["Summaries"] = summaries
