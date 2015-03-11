@@ -7,6 +7,12 @@
 _obj
 _test
 
+# Godeps
+Godeps/Readme
+Godeps/_workspace
+# Gom
+/_vendor
+
 # Architecture specific extensions/prefixes
 *.[568vq]
 [568vq].out
@@ -20,5 +26,21 @@ _cgo_export.*
 _testmain.go
 
 *.exe
-*.test
-*.prof
+/antenna
+/book
+
+*.db
+
+facialmess.orig.js
+parts.orig.js
+parts.orig.css
+
+/db/dbconf.yml
+/conf
+/logs
+/views
+/static
+/.bowerrc
+/bower.json
+/.hg
+/.hgignore
