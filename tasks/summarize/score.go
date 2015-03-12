@@ -32,13 +32,15 @@ func SocialScore() (err error) {
 }
 
 /*
-  ブログを回して登録RSS or 登録URLを元にReferer名をfind
-  UserAgent, Hostで UU(1セッション)とする
+  We execute the following is sequence.
 
-  ブログの累積Inアクセスを追加
+	  1. Provide score to blogs.
+	  2. Update blog's total score to the storage.
+	  3. Add entry(id) to the summary model: could register up to 500 entry.
 
-  SummaryモデルにEntry(ID)を追加する
-  Summary Tableは500件まで
+  Note:
+	Regard 1 Session(e.g. UU) to combine UserAgent and Host.
+
 */
 func InScore() (err error) {
 	var blogs []*models.Blog
@@ -50,6 +52,7 @@ func InScore() (err error) {
 	}
 	bqs.All(&blogs)
 
+	// Find referer by Stored URL(site host)
 	choices, err := score.ToScoredFrom(blogs)
 	if err != nil {
 		return
@@ -63,14 +66,15 @@ func InScore() (err error) {
 
 	// TODO: Return Update number and write log it.
 	//
-	// The following is terminated
-	//   - Add thirty record to summary
-	//   - If stored 30 entities yet, no register.
+	// We terminate following is conditions.
+	//   - Added 30 record to summary.
+	//   - If 30 entities stored already, no register.
 	//   - 10,000 Loop.
 	//   - 7 days ago.
+	//
 	summary.WeightingPushEntryBy(choices)
 
-	// If more than five hundred, Remove from old record.
+	// If more than five hundred, We remove from the old record.
 	max := int64(500)
 	sqs := models.Summaries()
 

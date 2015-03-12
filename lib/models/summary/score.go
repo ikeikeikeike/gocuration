@@ -14,7 +14,7 @@ import (
 	The following is terminated ::
 
 		- Add thirty record to summary
-		- If stored 30 entities yet, no register.
+		- If stored 30 entities already, no register.
 		- 10,000 Loop.
 		- 7 days ago.
 
