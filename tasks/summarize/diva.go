@@ -2,6 +2,7 @@ package summarize
 
 import "bitbucket.org/ikeikeikeike/antenna/models"
 
+// TODO: To unite
 func DivaVideoscount() (err error) {
 	var divas []*models.Diva
 

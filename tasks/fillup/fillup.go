@@ -48,6 +48,7 @@ func FillupFromGoogleimages(records interface{}, keyword string) (err error) {
 
 		ref := t.Index(i).Interface()
 
+		// TODO: To Interface logic.
 		switch ref.(type) {
 		case *models.Diva:
 			obj := ref.(*models.Diva)

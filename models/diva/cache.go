@@ -1,8 +1,8 @@
 package diva
 
 import (
+	"encoding/json"
 	"reflect"
-	"strings"
 
 	"bitbucket.org/ikeikeikeike/antenna/lib/cache"
 	"bitbucket.org/ikeikeikeike/antenna/models"
@@ -25,12 +25,10 @@ func DivasName() (names []string) {
 			return d.Name
 		}).([]string)
 
-		cache.Client.Put(key, names, 60*60*24*10)
+		bytes, _ := json.Marshal(names)
+		cache.Client.Put(key, bytes, 60*60*24*10)
 	} else {
-		divas := strings.Split(string(s.Interface().([]uint8)), " ")
-		for _, name := range divas {
-			names = append(names, name)
-		}
+		json.Unmarshal(s.Interface().([]uint8), &names)
 	}
 
 	return names

@@ -2,6 +2,7 @@ package summarize
 
 import "bitbucket.org/ikeikeikeike/antenna/models"
 
+// TODO: To unite
 func AnimePicturescount() (err error) {
 	var animes []*models.Anime
 
