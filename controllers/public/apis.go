@@ -35,16 +35,26 @@ func (c *ApisController) Parts() {
 		pers = 50
 	}
 
-	// TODO: リスティング広告も取り入れつつ、Accessトレードも考慮する形に変更
+	mtype := c.GetString("media_type")
+	adtype := c.GetString("adsense_type")
+
+	// TODO: リスティング広告も取り入れAccessトレードも考慮する形に変更
 	//
 	var sidx []*models.EntryIndex
 
-	key := fmt.Sprintf("controller.public.apis pers:%d", pers)
+	key := fmt.Sprintf(
+		"controller.public.apis pers:%d:%s:%s", pers, mtype, adtype)
 	s := reflect.ValueOf(cache.Client.Get(key))
 
 	if !cache.Client.IsExist(key) {
+
 		qs := models.Summaries().RelatedSel()
-		// qs = c.SetQ(qs, "")
+		if mtype != "" {
+			qs = qs.Filter("entry__blog__mediatype", mtype)
+		}
+		if adtype != "" {
+			qs = qs.Filter("entry__blog__adsensetype", adtype)
+		}
 
 		var summes []*models.Summary
 		qs.Limit(pers).All(&summes)
