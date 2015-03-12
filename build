@@ -1,0 +1,11 @@
+#!/bin/bash
+
+GOOS=linux GOARCH=amd64 go build -p 4 book.go
+GOOS=linux GOARCH=amd64 go build -p 4 antenna.go
+
+cd bin
+
+for f in *.go;
+do
+    GOOS=linux GOARCH=amd64 go build -p 4 $f
+done

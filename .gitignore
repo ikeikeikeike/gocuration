@@ -28,6 +28,10 @@ _testmain.go
 *.exe
 /antenna
 /book
+/bin/anime
+/bin/character
+/bin/diva
+/bin/summarize
 
 *.db
 
