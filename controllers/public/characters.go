@@ -18,7 +18,7 @@ func (c *CharactersController) Index() {
 
 	pers := c.DefaultPers
 	qs := models.Characters().RelatedSel()
-	// qs = c.SetBracupLines(c.SetPrefixLines(qs.Filter("pictures_count__gt", 0), ""))
+	qs = c.SetBracupLines(c.SetPrefixLines(qs.Filter("pictures_count__gt", 0), ""))
 
 	cnt, _ := models.CountObjects(qs)
 	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
