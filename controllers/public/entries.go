@@ -115,18 +115,26 @@ func (c *EntriesController) Show() {
 		return
 	}
 
+	var (
+		in         []string
+		divas      []*models.Diva
+		animes     []*models.Anime
+		summaries  []*models.Summary
+		characters []*models.Character
+	)
+
 	s.Blog.LoadRelated()
 	if s.Video != nil {
 		s.Video.LoadRelated()
+		divas = s.Video.Divas
 	}
 	if s.Picture != nil {
 		s.Picture.LoadRelated()
+		if s.Picture.Anime != nil {
+			animes = []*models.Anime{s.Picture.Anime}
+		}
+		characters = s.Picture.Characters
 	}
-
-	var (
-		in        []string
-		summaries []*models.Summary
-	)
 
 	for _, t := range s.Tags {
 		if t.Name != "" {
@@ -153,8 +161,11 @@ func (c *EntriesController) Show() {
 	ORDER BY s.sort DESC LIMIT 3`, names, names[0], s.Id)
 	orm.NewOrm().Raw(q).QueryRows(&summaries)
 
-	c.Data["Summaries"] = summaries
 	c.Data["Entry"] = s
+	c.Data["Divas"] = divas
+	c.Data["Animes"] = animes
+	c.Data["Summaries"] = summaries
+	c.Data["Characters"] = characters
 }
 
 func (c *EntriesController) Search() {
