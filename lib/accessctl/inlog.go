@@ -103,8 +103,12 @@ func (sin *ScoringInLog) Scoring(url string) (score int, err error) {
 
 	u, err := neturl.Parse(url)
 	if err == nil {
-		u.Path, u.RawQuery, u.Fragment = "", "", ""
-		key = u.String()
+		domain := strings.Split(u.Host, ":")[0]
+		if strings.Contains(domain, "livedoor.jp") {
+			key = strings.Split(u.Path, "/")[1]
+		} else {
+			key = domain
+		}
 	}
 
 	inlogs, err := sin.Find(key)
