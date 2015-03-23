@@ -22,17 +22,24 @@ func CachedSources(size string) (sources []string) {
 	if !cache.Client.IsExist(key) {
 		var q string
 
+		excludes := `
+		src not like '%xvideos.%' AND 
+		src not like '%erovideo.%' AND 
+		src not like '%redtube.%' AND 
+		src not like '%xhamster.%' AND 
+		src not like '%videomega.%' AND 
+		src not like '%fc2.png' AND 
+		src not like '%fc2.jpg'
+		`
+
 		if size == "small" {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width < 300 AND width > 100 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
-			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			q = fmt.Sprintf(`SELECT src FROM image WHERE width < 300 AND width > 100 AND %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// WHERE width < 300 AND width > 100
 		} else if size == "middle" {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
-			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND  %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// width < 500 AND width > 300
 		} else {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
-			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND				 	 %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// width > 500
 		}
 
