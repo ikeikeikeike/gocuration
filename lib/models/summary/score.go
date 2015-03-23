@@ -45,6 +45,10 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 		sql := `-- XXX: Need summary left join
 		SELECT entry.* FROM entry 
 		INNER JOIN 
+			entry_image ON entry_image.entry_id = entry.id 
+		INNER JOIN 
+			image ON image.id = entry_image.image_id 
+		INNER JOIN 
 		  blog ON blog.id = entry.blog_id 
 		LEFT OUTER JOIN 
 		  summary ON summary.entry_id = entry.id 
@@ -54,6 +58,10 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 		  entry.published_at >= ? 
 			AND 
 		  summary.id IS NULL 
+			AND 
+		  image.width > 280 
+		    AND 
+		  image.height > 200
 		ORDER BY entry.id DESC LIMIT 1
 		`
 		err := o.Raw(sql, blog, t).QueryRow(&entry)
