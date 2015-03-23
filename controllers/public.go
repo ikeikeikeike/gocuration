@@ -74,6 +74,25 @@ func (c *PublicController) SetQ(qs orm.QuerySeter, q string) orm.QuerySeter {
 	return qs
 }
 
+func (c *PublicController) SetNameKana(qs orm.QuerySeter) orm.QuerySeter {
+	v := c.GetString("q")
+	if v != "" {
+		for _, word := range convert.StrTo(v).MultiWord() {
+			c := orm.NewCondition().Or("name__icontains", word).Or("kana__icontains", word)
+			qs = qs.SetCond(c)
+		}
+	}
+	return qs
+}
+
+func (c *PublicController) SetImage(qs orm.QuerySeter, q string) orm.QuerySeter {
+	return qs.Filter(q+"blog__mediatype", "image")
+}
+
+func (c *PublicController) SetMovie(qs orm.QuerySeter, q string) orm.QuerySeter {
+	return qs.Filter(q+"blog__mediatype", "movie")
+}
+
 func (c *PublicController) SetMt(qs orm.QuerySeter, q string) orm.QuerySeter {
 	v := c.GetString("mt")
 	if v != "" {

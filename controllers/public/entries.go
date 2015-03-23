@@ -1,14 +1,11 @@
 package public
 
 import (
-	"fmt"
-	"strings"
-
 	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/anime"
 	"bitbucket.org/ikeikeikeike/antenna/models/diva"
+	"bitbucket.org/ikeikeikeike/antenna/models/summary"
 
-	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -35,22 +32,8 @@ func (c *EntriesController) Home() {
 		pers      = c.DefaultPers
 	)
 
-	dqs := c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), "")
-	aqs := c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")
-
-	v := c.GetString("q")
-	if v != "" {
-		for _, word := range convert.StrTo(v).MultiWord() {
-			c := orm.NewCondition()
-			c = c.Or("name__icontains", word)
-			c = c.Or("kana__icontains", word)
-
-			dqs = dqs.SetCond(c)
-			aqs = aqs.SetCond(c)
-		}
-	}
-	dqs.Limit(4).All(&divas)
-	aqs.Limit(4).All(&animes)
+	c.SetNameKana(c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), "")).Limit(4).All(&divas)
+	c.SetNameKana(c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")).Limit(4).All(&animes)
 
 	c.SetAdvancedSearch(models.Entries().RelatedSel(), "").Limit(pers).All(&entries)
 	c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel().Limit(pers).All(&summaries)
@@ -141,25 +124,7 @@ func (c *EntriesController) Show() {
 			in = append(in, t.Name)
 		}
 	}
-	if len(in) <= 0 {
-		in = append(in, "巨乳")
-	}
-
-	// models.Summaries().RelatedSel().
-	// Filter("entry__tags__tag__name__in", in).
-	// Limit(15).All(&summaries)
-	//
-	// 上記を `DISTINCT` 付きでやっている
-	names := fmt.Sprintf("'%s'", strings.Join(in, "','"))
-	q := fmt.Sprintf(`
-	SELECT DISTINCT s.* FROM summary as s 
-	LEFT OUTER JOIN entry e ON e.id = s.entry_id 
-	LEFT OUTER JOIN blog b ON b.id = e.blog_id 
-	LEFT OUTER JOIN entry_tag et ON et.entry_id = e.id 
-	LEFT OUTER JOIN tag tag ON tag.id = et.tag_id 
-	WHERE (tag.name IN (%s) OR e.q like '%%%s%%') AND e.id != '%d'
-	ORDER BY s.sort DESC LIMIT 3`, names, names[0], s.Id)
-	orm.NewOrm().Raw(q).QueryRows(&summaries)
+	summary.RelatedSummaries(s.Id, in, &summaries)
 
 	c.Data["Entry"] = s
 	c.Data["Divas"] = divas

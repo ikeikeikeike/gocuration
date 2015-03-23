@@ -20,18 +20,24 @@ func CachedSources(size string) (sources []string) {
 	s := reflect.ValueOf(cache.Client.Get(key))
 
 	if !cache.Client.IsExist(key) {
-		qs := orm.NewOrm().QueryTable("image").OrderBy("-Id")
+		var q string
 
 		if size == "small" {
-			qs = qs.Filter("width__gt", 100).Filter("width__lt", 300)
+			q = fmt.Sprint(`SELECT src FROM image WHERE width < 300 AND width > 100 AND src not like '%xvideos.%' AND 
+			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			// WHERE width < 300 AND width > 100
 		} else if size == "middle" {
-			qs = qs.Filter("width__gt", 300).Filter("width__lt", 500)
+			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND src not like '%xvideos.%' AND 
+			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			// width < 500 AND width > 300
 		} else {
-			qs = qs.Filter("width__gt", 500)
+			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND src not like '%xvideos.%' AND 
+			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
+			// width > 500
 		}
 
 		var list orm.ParamsList
-		qs.Limit(5000).ValuesFlat(&list, "src")
+		orm.NewOrm().Raw(q).ValuesFlat(&list, "src")
 
 		for _, src := range list {
 			sources = append(sources, src.(string))
