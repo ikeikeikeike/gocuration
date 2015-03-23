@@ -14,6 +14,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/ikeikeikeike/gopkg/extract/image"
+	"github.com/ikeikeikeike/gopkg/rdm"
 	"github.com/ikeikeikeike/gopkg/str"
 )
 
@@ -133,6 +134,27 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 			}
 		}
 		p.RelLoader()
+
+		// If does not main image, we will add to main image from picture.
+		var becreate bool = false
+
+		if len(e.Images) <= 0 {
+			becreate = true
+		}
+		for _, img := range e.Images {
+			if img.Width > 200 {
+				continue
+			}
+			becreate = true
+		}
+		if becreate && len(p.Images) > 0 {
+			_, err := o.QueryM2M(e, "Images").Add(p.Images[rdm.RandomNumber(0, len(p.Images))])
+			if err != nil {
+				msg := fmt.Sprintf("m2m add image Entry(id=%d):", e.Id)
+				beego.Warn(msg, err)
+			}
+			beego.Debug("create image Entry(id=", e.Id, ")")
+		}
 
 		// Save Character
 		var its []*models.Character
