@@ -36,10 +36,10 @@ func CachedSources(size string) (sources []string) {
 			q = fmt.Sprintf(`SELECT src FROM image WHERE width < 300 AND width > 100 AND %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// WHERE width < 300 AND width > 100
 		} else if size == "middle" {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND  %s ORDER BY id DESC LIMIT 3000`, excludes)
+			q = fmt.Sprintf(`SELECT src FROM image WHERE width < 500 AND width > 300 AND  %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// width < 500 AND width > 300
 		} else {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND				 	 %s ORDER BY id DESC LIMIT 3000`, excludes)
+			q = fmt.Sprintf(`SELECT src FROM image WHERE width > 500 AND				 	 %s ORDER BY id DESC LIMIT 3000`, excludes)
 			// width > 500
 		}
 
