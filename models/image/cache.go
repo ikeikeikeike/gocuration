@@ -23,15 +23,15 @@ func CachedSources(size string) (sources []string) {
 		var q string
 
 		if size == "small" {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width < 300 AND width > 100 AND src not like '%xvideos.%' AND 
+			q = fmt.Sprint(`SELECT src FROM image WHERE width < 300 AND width > 100 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
 			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
 			// WHERE width < 300 AND width > 100
 		} else if size == "middle" {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND src not like '%xvideos.%' AND 
+			q = fmt.Sprint(`SELECT src FROM image WHERE width < 500 AND width > 300 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
 			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
 			// width < 500 AND width > 300
 		} else {
-			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND src not like '%xvideos.%' AND 
+			q = fmt.Sprint(`SELECT src FROM image WHERE width > 500 AND src not like '%xvideos.%' AND src not like '%erovideo.%' AND
 			src not like '%redtube.%' AND src not like '%xhamster.%' AND src not like '%fc2.png' AND src not like '%fc2.jpg' ORDER BY id DESC LIMIT 3000`)
 			// width > 500
 		}
