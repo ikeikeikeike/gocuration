@@ -13,7 +13,7 @@ import (
 )
 
 /*
-	Cache expires: 3 days
+	Cache expires: 1 days
 */
 func CachedSources(size string) (sources []string) {
 	key := fmt.Sprintf("models.image.cachedfallbackimage:%s", size)
@@ -44,7 +44,7 @@ func CachedSources(size string) (sources []string) {
 		}
 
 		bytes, _ := json.Marshal(sources)
-		cache.Client.Put(key, bytes, 60*60*24*3)
+		cache.Client.Put(key, bytes, 60*60*24*1)
 	} else {
 		json.Unmarshal(s.Interface().([]uint8), &sources)
 	}
