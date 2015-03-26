@@ -26,7 +26,7 @@ func CachedSources(size string) (sources []string) {
 		src not like '%xvideos.%' AND 
 		src not like '%erovideo.%' AND 
 		src not like '%redtube.%' AND 
-		src not like '%xhamster.%' AND 
+		src not like '%hamster.%' AND 
 		src not like '%videomega.%' AND 
 		src not like '%fc2.png' AND 
 		src not like '%fc2.jpg'
