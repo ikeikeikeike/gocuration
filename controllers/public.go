@@ -111,11 +111,11 @@ func (c *PublicController) SetAt(qs orm.QuerySeter, q string) orm.QuerySeter {
 
 var PrefixLines = map[string][]string{
 	"あ": []string{"a", "i", "u", "e", "o"},
-	"か": []string{"ka", "ki", "ku", "ke", "ko"},
-	"さ": []string{"sa", "si", "su", "se", "so"},
-	"た": []string{"ta", "ti", "tu", "te", "to"},
+	"か": []string{"ka", "ki", "ku", "ke", "ko", "ga", "gi", "gu", "ge", "go"},
+	"さ": []string{"sa", "si", "su", "se", "so", "za", "zi", "zu", "ze", "zo"},
+	"た": []string{"ta", "ti", "tu", "te", "to", "da", "di", "du", "de", "do"},
 	"な": []string{"na", "ni", "nu", "ne", "no"},
-	"は": []string{"ha", "hi", "hu", "he", "ho"},
+	"は": []string{"ha", "hi", "hu", "he", "ho", "ba", "bi", "bu", "be", "bo", "pa", "pi", "pu", "pe", "po"},
 	"ま": []string{"ma", "mi", "mu", "me", "mo"},
 	"や": []string{"ya", "yu", "yo"},
 	"ら": []string{"ra", "ri", "ru", "re", "ro"},
