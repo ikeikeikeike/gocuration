@@ -65,6 +65,22 @@ func main() {
 				}
 			},
 		},
+		// {
+		// Name:  "fillupkana",
+		// Usage: "fillup to katakana in model",
+		// Action: func(c *cli.Context) {
+		// option := c.Args().First()
+		// if option == "" {
+		// println("Error: Does not multiple args. Set more than one args[mecab option]. e.g. /dic/mecab-ipadic-neologd")
+		// return
+		// }
+
+		// err := fillup.AnimeKanaByMecab(option)
+		// if err != nil {
+		// println(err.Error())
+		// }
+		// },
+		// },
 		{
 			Name: "googleimage",
 			// ShortName: "g",
