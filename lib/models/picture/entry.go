@@ -19,11 +19,11 @@ import (
 )
 
 var (
-	ReWords *regexp.Regexp
-	ReAlias *regexp.Regexp
+	ReChars  *regexp.Regexp
+	ReAnimes *regexp.Regexp
 
 	// 曖昧な言葉
-	IgnoreWords = []string{
+	IgnoreCharacters = []string{
 		"小悪魔", "女王様",
 		"主人公", "姉さん",
 		"篠崎愛", "生徒たち",
@@ -46,18 +46,22 @@ var (
 		"扇風機", "暗殺者",
 		"学園長", "殺人犯",
 		"赤ちゃん", "生徒会長",
+		"早乙女", "長谷川",
+		"二階堂", "魔法使い",
+		"陽太郎 ", "恵比寿",
+		"管理人さん", "営業マン",
 	}
 
 	// 曖昧な言葉
-	IgnoreAlias = []string{
-		"パンスト", "ガールフレンド（仮）",
+	IgnoreAnimes = []string{
+		"パンスト", "いっき",
 		"めぐみ", "タッチ", "みゆき", "かりん",
 	}
 )
 
 func init() {
-	ReWords = regexp.MustCompile(fmt.Sprintf(`^(%s)$`, strings.Join(IgnoreWords, "|")))
-	ReAlias = regexp.MustCompile(fmt.Sprintf(`^(%s)$`, strings.Join(IgnoreAlias, "|")))
+	ReChars = regexp.MustCompile(fmt.Sprintf(`^(%s)$`, strings.Join(IgnoreCharacters, "|")))
+	ReAnimes = regexp.MustCompile(fmt.Sprintf(`^(%s)$`, strings.Join(IgnoreAnimes, "|")))
 }
 
 /*
@@ -161,7 +165,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 		for _, c := range character.CachedCharacters() {
 			if libm.ReHK3.MatchString(c.Name) {
 				continue
-			} else if ReWords.MatchString(c.Name) {
+			} else if ReChars.MatchString(c.Name) {
 				continue
 			} else if c.Id > 0 && len([]rune(c.Name)) > 2 {
 				if strings.Contains(e.Title, c.Name) {
@@ -191,7 +195,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 
 			if c.Id > 0 {
 				for _, aka := range strings.Split(c.Alias, ",") {
-					if len([]rune(aka)) > 2 && !ReAlias.MatchString(aka) {
+					if len([]rune(aka)) > 2 && !ReAnimes.MatchString(aka) {
 						if strings.Contains(e.Title, aka) {
 							p.Anime = c
 						} else if strings.Contains(e.Content, aka) {
@@ -200,7 +204,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 					}
 				}
 
-				if len([]rune(c.Name)) > 2 {
+				if len([]rune(c.Name)) > 2 && !ReAnimes.MatchString(c.Name) {
 					if strings.Contains(e.Title, c.Name) {
 						p.Anime = c
 					} else if strings.Contains(e.Content, c.Name) {
