@@ -36,7 +36,7 @@ func RegisterMail(tu *models.Tmpuser, u *models.User) (*models.User, error) {
 	)
 
 	u.Email = tu.Email
-	err = u.Update("Email")
+	err = u.Update("Email", "Updated")
 	if err != nil {
 		return u, err
 	}
