@@ -32,6 +32,7 @@ type Diva struct {
 	Bracup string `orm:"size(8);index;null"`
 
 	Outline string `orm:"type(text);null"`
+	Html    string `orm:"type(text);null"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
