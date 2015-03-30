@@ -219,7 +219,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 				}
 
 				if p.Anime != nil {
-					p.Update("Anime")
+					p.Update("Anime", "Updated")
 				}
 			}
 		}
