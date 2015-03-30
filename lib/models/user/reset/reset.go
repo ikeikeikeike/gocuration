@@ -55,7 +55,7 @@ func RegisterPassword(tu *models.Tmpuser) (*models.User, error) {
 	}
 
 	u.Password = convert.StrTo(tu.Password).Md5()
-	err = u.Update("Password")
+	err = u.Update("Password", "Updated")
 	if err != nil {
 		return u, err
 	}
