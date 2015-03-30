@@ -14,7 +14,7 @@ func CharacterPicturescount() (err error) {
 		if err == nil {
 			if c.PicturesCount < int(nums) {
 				c.PicturesCount = int(nums)
-				c.Update("PicturesCount")
+				c.Update("PicturesCount", "Updated")
 			}
 
 		}

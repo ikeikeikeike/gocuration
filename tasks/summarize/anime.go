@@ -14,7 +14,7 @@ func AnimePicturescount() (err error) {
 		if err == nil {
 			if m.PicturesCount < int(nums) {
 				m.PicturesCount = int(nums)
-				m.Update("PicturesCount")
+				m.Update("PicturesCount", "Updated")
 			}
 		}
 	}

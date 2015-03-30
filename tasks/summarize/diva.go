@@ -14,7 +14,7 @@ func DivaVideoscount() (err error) {
 		if err == nil {
 			if d.VideosCount < int(nums) {
 				d.VideosCount = int(nums)
-				d.Update("VideosCount")
+				d.Update("VideosCount", "Updated")
 			}
 
 		}
