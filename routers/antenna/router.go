@@ -28,13 +28,13 @@ func init() {
 	beego.Router(`/tag/:name`, &public.TagsController{}, "get:Show")
 
 	beego.Router("/divas.html", &public.DivasController{}, "get:Index")
-	beego.Router(`/diva/:name`, &public.DivasController{}, "get:Show")
+	beego.Router(`/diva/:name`, &public.DivasController{}, "get,post:Show")
 
 	beego.Router("/animes.html", &public.AnimesController{}, "get:Index")
-	beego.Router(`/anime/:name`, &public.AnimesController{}, "get:Show")
+	beego.Router(`/anime/:name`, &public.AnimesController{}, "get,post:Show")
 
 	beego.Router("/characters.html", &public.CharactersController{}, "get:Index")
-	beego.Router(`/character/:name`, &public.CharactersController{}, "get:Show")
+	beego.Router(`/character/:name`, &public.CharactersController{}, "get,post:Show")
 
 	beego.Router(`/register.html`, &public.RegistersController{}, "get:Index")
 	beego.Router(`/register/parts.html`, &public.RegistersController{}, "get:Parts")
