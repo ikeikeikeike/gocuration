@@ -1,6 +1,8 @@
 package public
 
 import (
+	"time"
+
 	"bitbucket.org/ikeikeikeike/antenna/models"
 
 	"github.com/astaxie/beego/utils/pagination"
@@ -49,6 +51,19 @@ func (c *DivasController) Show() {
 		c.Ctx.Abort(404, "404 NotFound")
 		return
 	}
+
+	// Update raw html
+	if c.IsAjax() && c.Ctx.Input.IsPost() {
+		s.Html = c.GetString("data")
+		s.Update("Html", "Updated")
+		c.ServeJson()
+		return
+	}
+	// Raw html update expire: 5 day
+	if (s.Updated.Unix() + (60 * 60 * 24 * 5)) < time.Now().Unix() {
+		s.Html = ""
+	}
+	c.Data["xsrftoken"] = c.XsrfToken()
 
 	s.LoadRelated()
 	c.Data["Diva"] = s
