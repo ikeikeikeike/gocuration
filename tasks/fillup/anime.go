@@ -41,11 +41,11 @@ func AnimeByCharacterModel() (err error) {
 		anime.RelLoader()
 
 		c.Anime = anime
-		c.Update("Anime")
+		c.Update("Anime", "Updated")
 
 		for _, p := range c.Pictures {
 			p.Anime = anime
-			p.Update("Anime")
+			p.Update("Anime", "Updated")
 		}
 	}
 
@@ -169,7 +169,7 @@ func AnimeImageByGoogleimages() (err error) {
 // }
 // }
 
-// m.Update("Kana", "Romaji", "Gyou")
+// m.Update("Kana", "Romaji", "Gyou", "Updated")
 // }
 
 // return
