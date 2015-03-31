@@ -46,27 +46,21 @@ func (c *DivasController) Show() {
 
 	s := &models.Diva{Name: name}
 	s.Read("Name")
-
 	if s.Id <= 0 {
 		c.Ctx.Abort(404, "404 NotFound")
 		return
 	}
 
-	// Update raw html
+	// Update Raw HTML
 	if c.IsAjax() && c.Ctx.Input.IsPost() {
 		s.Html = c.GetString("data")
-		s.Update("Html", "Updated")
+		s.HtmlExpire = time.Now()
+		s.Update("Html", "HtmlExpire", "Updated")
 		c.ServeJson()
 		return
 	}
-	// Raw html update expire: 5 day
-	if (s.Updated.Unix() + (60 * 60 * 24 * 5)) < time.Now().Unix() {
-		s.Html = ""
-	}
-	c.Data["xsrftoken"] = c.XsrfToken()
 
 	s.LoadRelated()
-	c.Data["Diva"] = s
 
 	pers := c.DefaultPers
 	qs := models.Videos()
@@ -81,5 +75,9 @@ func (c *DivasController) Show() {
 	var videos []*models.Video
 	models.ListObjects(qs, &videos)
 
+	c.Data["Diva"] = s
 	c.Data["Videos"] = videos
+	c.Data["xsrftoken"] = c.XsrfToken()
+	expire := s.HtmlExpire.Unix() + (60 * 60 * 24 * 30) // Raw html update expire: 30 day
+	c.Data["doCache"] = expire < time.Now().Unix()
 }

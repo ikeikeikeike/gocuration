@@ -31,8 +31,9 @@ type Diva struct {
 	Hip    int    `orm:"default(0);index"`
 	Bracup string `orm:"size(8);index;null"`
 
-	Outline string `orm:"type(text);null"`
-	Html    string `orm:"type(text);null"`
+	Outline    string    `orm:"type(text);null"`
+	Html       string    `orm:"type(text);null"`
+	HtmlExpire time.Time `orm:"type(datetime);null"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
