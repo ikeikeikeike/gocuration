@@ -53,18 +53,13 @@ func (c *CharactersController) Show() {
 	// Update raw html
 	if c.IsAjax() && c.Ctx.Input.IsPost() {
 		s.Html = c.GetString("data")
-		s.Update("Html", "Updated")
+		s.HtmlExpire = time.Now()
+		s.Update("Html", "HtmlExpire", "Updated")
 		c.ServeJson()
 		return
 	}
-	// Raw html update expire: 5 day
-	if (s.Updated.Unix() + (60 * 60 * 24 * 5)) < time.Now().Unix() {
-		s.Html = ""
-	}
-	c.Data["xsrftoken"] = c.XsrfToken()
 
 	s.LoadRelated()
-	c.Data["Character"] = s
 
 	pers := c.DefaultPers
 	qs := models.Pictures()
@@ -79,6 +74,10 @@ func (c *CharactersController) Show() {
 	var pictures []*models.Picture
 	models.ListObjects(qs, &pictures)
 
+	c.Data["Character"] = s
 	c.Data["Pictures"] = pictures
 	c.Data["Animes"] = []*models.Anime{s.Anime}
+	c.Data["xsrftoken"] = c.XsrfToken()
+	expire := s.HtmlExpire.Unix() + (60 * 60 * 24 * 30) // Raw html update expire: 30 day
+	c.Data["doCache"] = expire < time.Now().Unix()
 }
