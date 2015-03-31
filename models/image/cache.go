@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/orm"
+	"github.com/ikeikeikeike/gopkg/db/dialect"
 
 	"bitbucket.org/ikeikeikeike/antenna/lib/cache"
 )
@@ -33,13 +34,19 @@ func CachedSources(size string) (sources []string) {
 		`
 
 		if size == "small" {
-			q = fmt.Sprintf(`SELECT src FROM image WHERE width < 300 AND width > 100 AND %s ORDER BY id DESC LIMIT 3000`, excludes)
+			q = fmt.Sprintf(
+				`SELECT src FROM image WHERE width < 300 AND width > 100 AND %s ORDER BY %s LIMIT 1000`,
+				excludes, dialect.RandomBuiltinFunc())
 			// WHERE width < 300 AND width > 100
 		} else if size == "middle" {
-			q = fmt.Sprintf(`SELECT src FROM image WHERE width < 500 AND width > 300 AND  %s ORDER BY id DESC LIMIT 3000`, excludes)
+			q = fmt.Sprintf(
+				`SELECT src FROM image WHERE width < 500 AND width > 300 AND %s ORDER BY %s LIMIT 1000`,
+				excludes, dialect.RandomBuiltinFunc())
 			// width < 500 AND width > 300
 		} else {
-			q = fmt.Sprintf(`SELECT src FROM image WHERE width > 500 AND				 	 %s ORDER BY id DESC LIMIT 3000`, excludes)
+			q = fmt.Sprintf(
+				`SELECT src FROM image WHERE width > 500 AND				 %s ORDER BY %s LIMIT 1000`,
+				excludes, dialect.RandomBuiltinFunc())
 			// width > 500
 		}
 
