@@ -30,8 +30,9 @@ type Anime struct {
 
 	ReleaseDate time.Time `orm:"type(date);index;null"`
 
-	Outline string `orm:"type(text);null"`
-	Html    string `orm:"type(text);null"`
+	Outline    string    `orm:"type(text);null"`
+	Html       string    `orm:"type(text);null"`
+	HtmlExpire time.Time `orm:"type(datetime);null"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
