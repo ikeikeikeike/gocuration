@@ -134,6 +134,31 @@ func (c *EntriesController) Show() {
 	c.Data["Characters"] = characters
 }
 
+func (c *EntriesController) Viewer() {
+	c.Layout = "base/none/base.tpl"
+	c.TplNames = "book/entries/viewer.tpl"
+
+	id := c.Ctx.Input.Param(":id")
+	if id == "" {
+		c.Ctx.Abort(404, "404 NotFound")
+		return
+	}
+
+	uid, _ := convert.StrTo(id).Int64()
+	s := &models.Entry{Id: uid}
+	s.Read()
+
+	if !s.IsLiving() {
+		c.Ctx.Abort(404, "404 NotFound")
+		return
+	}
+
+	s.Blog.LoadRelated()
+	s.Picture.LoadRelated()
+
+	c.Data["Entry"] = s
+}
+
 func (c *EntriesController) Search() {
 	c.TplNames = "public/entries/search.tpl"
 }
