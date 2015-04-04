@@ -22,6 +22,8 @@ type Blog struct {
 	VerifyRss   int `orm:"default(1);null" form:"VerifyRss" valid:"Range(0,3)"`
 	VerifyParts int `orm:"default(1);null" form:"VerifyParts" valid:"Range(0,3)"`
 
+	IsPenalty bool `orm:"default(0)"`
+
 	LastModified time.Time `orm:"type(datetime);null;index"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`

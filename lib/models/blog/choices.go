@@ -24,8 +24,14 @@ func WhightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
 			cnt = 1
 		}
 
+		// DMCA affect
+		weight := cnt * b.VerifyScore()
+		if b.IsPenalty {
+			weight = 1
+		}
+
 		choices = append(choices, randutil.Choice{
-			Weight: cnt * b.VerifyScore(),
+			Weight: weight,
 			Item:   b,
 		})
 	}

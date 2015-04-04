@@ -22,9 +22,16 @@ var storedNum = 5
 
 func AddsByChannels(chs []*rss.Channel, b *models.Blog) (entries []*models.Entry, errs []error) {
 	o := orm.NewOrm()
+
+	// DMCA affect
+	num := (storedNum + b.VerifyScore())
+	if b.IsPenalty {
+		num = 1
+	}
+
 	for _, ch := range chs {
 		for idx, it := range ch.Items {
-			if idx >= (storedNum + b.VerifyScore()) {
+			if idx >= num {
 				break
 			}
 			if exists := o.QueryTable("entry").Filter("Url", it.Links[0].Href).Exist(); !exists {
