@@ -36,7 +36,7 @@ func SocialScore() (err error) {
 
 	  1. Provide score to blogs.
 	  2. Update blog's total score to the storage.
-	  3. Add entry(id) to the summary model: could register up to 500 entry.
+	  3. Add entry(id) to the summary model: could register up to 1000 entry.
 
   Note:
 	Regard 1 Session(e.g. UU) to combine UserAgent and Host.
@@ -75,7 +75,7 @@ func InScore() (err error) {
 	summary.WeightingPushEntryBy(choices)
 
 	// If more than five hundred, We remove from the old record.
-	max := int64(500)
+	max := int64(1000)
 	sqs := models.Summaries()
 
 	cnt, _ := sqs.Count()

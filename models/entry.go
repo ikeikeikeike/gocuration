@@ -79,6 +79,10 @@ type EntryIndex struct {
 	OutScore int64 `json:"outScore"`
 }
 
+func (m *Entry) IdStr() string {
+	return convert.ToStr(m.Id)
+}
+
 // For elasticsearch index data
 func (m *Entry) SearchData() *EntryIndex {
 	tags := []string{}
