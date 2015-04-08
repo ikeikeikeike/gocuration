@@ -16,13 +16,15 @@ func init() {
 	toolbox.AddTask("summarizeAnimePicturescount", summarizeAnimePicturescount())
 
 	toolbox.AddTask("fillupDivaByApiActresses", fillupDivaByApiActresses())
-	toolbox.AddTask("fillupDivaImageByGoogleimages", fillupDivaImageByGoogleimages())
+	toolbox.AddTask("starringDivaImageByGoogleimages", starringDivaImageByGoogleimages())
+	toolbox.AddTask("allDivaImageByGoogleimages", allDivaImageByGoogleimages())
 	toolbox.AddTask("fillupCharacterByNeoapo", fillupCharacterByNeoapo())
 	toolbox.AddTask("fillupCharacterImageByGoogleimages", fillupCharacterImageByGoogleimages())
 	toolbox.AddTask("fillupAnimeByNeoapo", fillupAnimeByNeoapo())
 	toolbox.AddTask("fillupAnimeImageByGoogleimages", fillupAnimeImageByGoogleimages())
 
-	toolbox.AddTask("divaInfoByWikipedia", divaInfoByWikipedia())
+	toolbox.AddTask("starringDivaInfoByWikipedia", starringDivaInfoByWikipedia())
+	toolbox.AddTask("allDivaInfoByWikipedia", allDivaInfoByWikipedia())
 }
 
 // [seconds] [minutes] [hours] [days] [months] [weeks]
@@ -98,9 +100,17 @@ func fillupDivaByApiActresses() *toolbox.Task {
 }
 
 // Execute: xxxx-xx-xx 06:06:06
-func fillupDivaImageByGoogleimages() *toolbox.Task {
-	return toolbox.NewTask("fillupDivaImageByGoogleimages", "6 6 6 * * *", func() (err error) {
-		err = fillup.DivaImageByGoogleimages()
+func starringDivaImageByGoogleimages() *toolbox.Task {
+	return toolbox.NewTask("starringDivaImageByGoogleimages", "6 6 6 * * *", func() (err error) {
+		err = fillup.StarringDivaImageByGoogleimages()
+		return
+	})
+}
+
+// Execute: xxxx-1,3,5,7,,,-15 00:00:00
+func allDivaImageByGoogleimages() *toolbox.Task {
+	return toolbox.NewTask("allDivaImageByGoogleimages", "0 0 0 15 */2 *", func() (err error) {
+		err = fillup.AllDivaImageByGoogleimages()
 		return
 	})
 }
@@ -122,9 +132,17 @@ func fillupAnimeImageByGoogleimages() *toolbox.Task {
 }
 
 // Execute: xxxx-xx-xx 07:07:07
-func divaInfoByWikipedia() *toolbox.Task {
-	return toolbox.NewTask("divaInfoByWikipedia", "7 7 7 * * *", func() (err error) {
-		err = fillup.DivaInfoByWikipedia()
+func starringDivaInfoByWikipedia() *toolbox.Task {
+	return toolbox.NewTask("starringDivaInfoByWikipedia", "7 7 7 * * *", func() (err error) {
+		err = fillup.StarringDivaInfoByWikipedia()
+		return
+	})
+}
+
+// Execute: xxxx-1,4,7,,,-07 07:07:07
+func allDivaInfoByWikipedia() *toolbox.Task {
+	return toolbox.NewTask("allDivaInfoByWikipedia", "7 7 7 7 */3 *", func() (err error) {
+		err = fillup.AllDivaInfoByWikipedia()
 		return
 	})
 }

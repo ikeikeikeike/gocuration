@@ -52,7 +52,7 @@ func main() {
 			// ShortName: "g",
 			Usage: "Fill image up to the diva model by google image api",
 			Action: func(c *cli.Context) {
-				err := fillup.DivaImageByGoogleimages()
+				err := fillup.StarringDivaImageByGoogleimages()
 				if err != nil {
 					println(err.Error())
 				}
@@ -63,7 +63,29 @@ func main() {
 			// ShortName: "g",
 			Usage: "Fill infomation up to the diva model by wikimedia api",
 			Action: func(c *cli.Context) {
-				err := fillup.DivaInfoByWikipedia()
+				err := fillup.StarringDivaInfoByWikipedia()
+				if err != nil {
+					println(err.Error())
+				}
+			},
+		},
+		{
+			Name: "fullgoogleimage",
+			// ShortName: "g",
+			Usage: "Fill image up to the diva model by google image api",
+			Action: func(c *cli.Context) {
+				err := fillup.AllDivaImageByGoogleimages()
+				if err != nil {
+					println(err.Error())
+				}
+			},
+		},
+		{
+			Name: "fullwikipedia",
+			// ShortName: "g",
+			Usage: "Fill infomation up to the diva model by wikimedia api",
+			Action: func(c *cli.Context) {
+				err := fillup.AllDivaInfoByWikipedia()
 				if err != nil {
 					println(err.Error())
 				}

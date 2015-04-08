@@ -49,7 +49,15 @@ func DivaByApiActresses() error {
 	return nil
 }
 
-func DivaImageByGoogleimages() (err error) {
+func AllDivaImageByGoogleimages() (err error) {
+	var divas []*models.Diva
+	models.Divas().RelatedSel().Limit(1000000).All(&divas)
+
+	err = FillupFromGoogleimages(divas, "AV女優")
+	return
+}
+
+func StarringDivaImageByGoogleimages() (err error) {
 	var divas []*models.Diva
 	diva.StarringDivas().RelatedSel().Limit(1000000).All(&divas)
 
@@ -57,18 +65,27 @@ func DivaImageByGoogleimages() (err error) {
 	return
 }
 
-func DivaInfoByWikipedia() (err error) {
-	c := divaextractor.NewWikipedia()
-	c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
+func AllDivaInfoByWikipedia() (err error) {
+	var divas []*models.Diva
+	models.Divas().RelatedSel().Limit(1000000).All(&divas)
+	return updateDivaInfoByWikipedia(divas)
+}
 
+func StarringDivaInfoByWikipedia() (err error) {
 	var divas []*models.Diva
 	diva.StarringDivas().RelatedSel().Limit(1000000).All(&divas)
+	return updateDivaInfoByWikipedia(divas)
+}
+
+func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
+	c := divaextractor.NewWikipedia()
+	c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
 
 	var msg string
 	var errs []error
 	t := shuffler.Shuffler(divas).(reflect.Value)
 	for i := 0; i < t.Len(); i++ {
-		time.Sleep(41 * time.Second)
+		time.Sleep(73 * time.Second)
 
 		d := t.Index(i).Interface().(*models.Diva)
 
