@@ -48,3 +48,4 @@ parts.orig.css
 /bower.json
 /.hg
 /.hgignore
+/book.go
