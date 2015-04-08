@@ -30,6 +30,12 @@ type GoogleimagesUpdater interface {
 	UpdateIconByFileInfo(*image.FileInfo, string) error
 }
 
+func newImageClient() *googleimages.Client {
+	c := googleimages.NewClient()
+	c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
+	return c
+}
+
 func FillupFromGoogleimages(records interface{}, keyword string) (err error) {
 	var (
 		errs               []error
@@ -37,8 +43,7 @@ func FillupFromGoogleimages(records interface{}, keyword string) (err error) {
 		fileinfo           *image.FileInfo
 	)
 
-	c := googleimages.NewClient()
-	c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
+	c := newImageClient()
 
 	checker := availableFilechecker()
 	t := shuffler.Shuffler(records).(reflect.Value)
@@ -86,10 +91,12 @@ func FillupFromGoogleimages(records interface{}, keyword string) (err error) {
 		result, err := c.Fetch(fmt.Sprintf("%s %s %s", name, keyword, product))
 
 		if err != nil {
+			c = newImageClient()
 			beego.Warning(err)
 			errs = append(errs, err)
 			continue
 		} else if len(result.ResponseData.Results) <= 0 {
+			c = newImageClient()
 			continue
 		} else if len(errs) >= 10 {
 			msg := fmt.Sprintf(

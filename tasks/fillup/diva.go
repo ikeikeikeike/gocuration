@@ -101,6 +101,7 @@ func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
 			beego.Warning(msg)
 			errs = append(errs, errors.New(msg))
 
+			// refresh client
 			c = divaextractor.NewWikipedia()
 			c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
 			continue
