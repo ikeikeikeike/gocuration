@@ -103,15 +103,33 @@ func (m *Diva) UpdateIconByFileInfo(info *image.FileInfo, name string) error {
 	return m.Icon.Update()
 }
 
+// May be adding data
 func (m *Diva) UpdateByWikipedia(wiki *divaextractor.Wikipedia) error {
-	m.Birthday = wiki.Birthday()
-	m.Blood = wiki.Blood()
-	m.Height = wiki.Height()
-	m.Weight = wiki.Weight()
-	m.Bust = wiki.Bust()
-	m.Waste = wiki.Waist()
-	m.Hip = wiki.Hip()
-	m.Bracup = wiki.Bracup()
+
+	if wiki.Birthday().Unix() > 1000 {
+		m.Birthday = wiki.Birthday()
+	}
+	if wiki.Blood() != "" {
+		m.Blood = wiki.Blood()
+	}
+	if wiki.Height() > 10 {
+		m.Height = wiki.Height()
+	}
+	if wiki.Weight() > 10 {
+		m.Weight = wiki.Weight()
+	}
+	if wiki.Bust() > 10 {
+		m.Bust = wiki.Bust()
+	}
+	if wiki.Waist() > 10 {
+		m.Waste = wiki.Waist()
+	}
+	if wiki.Hip() > 10 {
+		m.Hip = wiki.Hip()
+	}
+	if wiki.Bracup() != "" {
+		m.Bracup = wiki.Bracup()
+	}
 
 	return m.Update()
 }

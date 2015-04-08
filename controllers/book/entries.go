@@ -5,7 +5,8 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/models/anime"
 	"bitbucket.org/ikeikeikeike/antenna/models/diva"
 	"bitbucket.org/ikeikeikeike/antenna/models/summary"
-
+	"bitbucket.org/ikeikeikeike/antenna/ormapper"
+	ani "bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -32,9 +33,12 @@ func (c *EntriesController) Home() {
 		pers      = c.DefaultPers
 	)
 
-	qs := c.SetNameKana(c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), ""))
-	c.SetImage(qs, "videos__video__entry__").Limit(4).All(&divas)
-	c.SetImage(c.SetNameKana(c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")), "pictures__entry__").Limit(4).All(&animes)
+	// qs := c.SetNameKana(c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), ""))
+	// c.SetImage(qs, "videos__video__entry__").Limit(4).All(&divas)
+	// c.SetImage(c.SetNameKana(c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")), "pictures__entry__").Limit(4).All(&animes)
+
+	diva.MediatypedDivas("image", 4, &divas)
+	anime.MediatypedAnimes("image", 4, &animes)
 
 	c.SetImage(c.SetAdvancedSearch(models.Entries().RelatedSel(), ""), "").Limit(pers).All(&entries)
 	c.SetImage(c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
@@ -43,6 +47,20 @@ func (c *EntriesController) Home() {
 	c.Data["Animes"] = animes
 	c.Data["Entries"] = entries
 	c.Data["Summaries"] = summaries
+
+	db := ani.PictureAnimations().
+		Scopes(ani.PictureCountMoreThanZero, ani.FilterMediatype("image"))
+
+	v := c.GetString("q")
+	if v != "" {
+		db = db.Scopes(ani.FilterNameKana(convert.StrTo(v).MultiWord()))
+	}
+
+	var list []ormapper.Anime
+
+	db.Limit(4).Find(&list)
+
+	c.Data["Animes"] = list
 }
 
 func (c *EntriesController) News() {
