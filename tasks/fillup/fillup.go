@@ -44,7 +44,7 @@ func FillupFromGoogleimages(records interface{}, keyword string) (err error) {
 	t := shuffler.Shuffler(records).(reflect.Value)
 
 	for i := 0; i < t.Len(); i++ {
-		time.Sleep(41 * time.Second)
+		time.Sleep(73 * time.Second)
 
 		ref := t.Index(i).Interface()
 
