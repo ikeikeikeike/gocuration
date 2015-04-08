@@ -51,7 +51,7 @@ func DivaByApiActresses() error {
 
 func AllDivaImageByGoogleimages() (err error) {
 	var divas []*models.Diva
-	models.Divas().RelatedSel().Limit(1000000).All(&divas)
+	models.Divas().RelatedSel().Limit(1000000).OrderBy("Updated").All(&divas)
 
 	err = FillupFromGoogleimages(divas, "AV女優")
 	return
@@ -59,7 +59,7 @@ func AllDivaImageByGoogleimages() (err error) {
 
 func StarringDivaImageByGoogleimages() (err error) {
 	var divas []*models.Diva
-	diva.StarringDivas().RelatedSel().Limit(1000000).All(&divas)
+	diva.StarringDivas().RelatedSel().Limit(1000000).OrderBy("Updated").All(&divas)
 
 	err = FillupFromGoogleimages(divas, "AV女優")
 	return
@@ -67,13 +67,13 @@ func StarringDivaImageByGoogleimages() (err error) {
 
 func AllDivaInfoByWikipedia() (err error) {
 	var divas []*models.Diva
-	models.Divas().RelatedSel().Limit(1000000).All(&divas)
+	models.Divas().RelatedSel().Limit(1000000).OrderBy("Updated").All(&divas)
 	return updateDivaInfoByWikipedia(divas)
 }
 
 func StarringDivaInfoByWikipedia() (err error) {
 	var divas []*models.Diva
-	diva.StarringDivas().RelatedSel().Limit(1000000).All(&divas)
+	diva.StarringDivas().RelatedSel().Limit(1000000).OrderBy("Updated").All(&divas)
 	return updateDivaInfoByWikipedia(divas)
 }
 
@@ -100,6 +100,9 @@ func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
 				"Wikipedia fetch error: %s", d.Name)
 			beego.Warning(msg)
 			errs = append(errs, errors.New(msg))
+
+			c = divaextractor.NewWikipedia()
+			c.Header("User-Agent", beego.AppConfig.String("UserAgent"))
 			continue
 		}
 
@@ -110,11 +113,20 @@ func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
 			beego.Warning(msg)
 			errs = append(errs, errors.New(msg))
 		}
+
+		if len(errs) >= 100 {
+			msg := fmt.Sprintf(
+				"Max errors in wiki update: %d length",
+				len(errs),
+			)
+			beego.Error(msg, errs)
+			break
+		}
 	}
 
 	if len(errs) > 0 {
 		msg := fmt.Sprintf(
-			"Max errors by google image update: %d length.",
+			"Max errors by wiki update: %d length.",
 			len(errs),
 		)
 		beego.Error(msg, errs)
