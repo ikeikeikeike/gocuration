@@ -250,6 +250,10 @@ func Entries() orm.QuerySeter {
 	return orm.NewOrm().QueryTable("entry").OrderBy("-Id")
 }
 
+func PictureEntries() orm.QuerySeter {
+	return orm.NewOrm().QueryTable("entry").Filter("picture__isnull", false).OrderBy("-Id")
+}
+
 func init() {
 	orm.RegisterModelWithPrefix(
 		beego.AppConfig.String("dbprefix"),

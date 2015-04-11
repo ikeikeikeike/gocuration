@@ -66,6 +66,10 @@ func Summaries() orm.QuerySeter {
 	return orm.NewOrm().QueryTable("summary").OrderBy("-sort")
 }
 
+func PictureSummaries() orm.QuerySeter {
+	return orm.NewOrm().QueryTable("summary").Filter("entry__picture__isnull", false).OrderBy("-sort")
+}
+
 func init() {
 	orm.RegisterModelWithPrefix(
 		beego.AppConfig.String("dbprefix"),

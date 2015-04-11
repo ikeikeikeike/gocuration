@@ -93,6 +93,14 @@ func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
 		if d.Bracup != "" {
 			continue // File ok
 		}
+		if len(errs) >= 100 {
+			msg := fmt.Sprintf(
+				"Max errors in wiki update: %d length",
+				len(errs),
+			)
+			beego.Error(msg, errs)
+			break
+		}
 
 		err := c.Do(d.Name)
 		if err != nil {
@@ -113,15 +121,6 @@ func updateDivaInfoByWikipedia(divas []*models.Diva) (err error) {
 				"Update diva by wikipedia: %s", d.Name)
 			beego.Warning(msg)
 			errs = append(errs, errors.New(msg))
-		}
-
-		if len(errs) >= 100 {
-			msg := fmt.Sprintf(
-				"Max errors in wiki update: %d length",
-				len(errs),
-			)
-			beego.Error(msg, errs)
-			break
 		}
 	}
 

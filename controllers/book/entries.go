@@ -5,7 +5,7 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/models/summary"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
 	ani "bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
-	di "bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
+	en "bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -24,48 +24,45 @@ func (c *EntriesController) NestFinish() {
 func (c *EntriesController) Home() {
 	c.TplNames = "book/entries/home.tpl"
 
-	var (
-		// divas []*models.Diva
-		// animes    []*models.Anime
-		entries   []*models.Entry
-		summaries []*models.Summary
-		// pers      = c.DefaultPers
-	)
+	// var pers = c.DefaultPers
 
-	// qs := c.SetNameKana(c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), ""))
-	// c.SetImage(qs, "videos__video__entry__").Limit(4).All(&divas)
-	// c.SetImage(c.SetNameKana(c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")), "pictures__entry__").Limit(4).All(&animes)
+	// var entries []*models.Entry
+	// c.SetImage(c.SetAdvancedSearch(models.PictureEntries().RelatedSel(), ""), "").Limit(pers).All(&entries)
+	// c.Data["Entries"] = entries
 
-	// diva.MediatypedDivas("image", 4, &divas)
-	// anime.MediatypedAnimes("image", 4, &animes)
+	var summaries []*models.Summary
 
-	// c.SetImage(c.SetAdvancedSearch(models.Entries().RelatedSel(), ""), "").Limit(pers).All(&entries)
-	// c.SetImage(c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
-
-	// c.Data["Animes"] = animes
-	c.Data["Entries"] = entries
+	// c.SetImage(c.SetAdvancedSearch(models.PictureSummaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
 	c.Data["Summaries"] = summaries
 
-	var divas []ormapper.Diva
-	di.VideoGoddess().
-		Scopes(di.VideoCountMoreThanZero).
-		Scopes(di.FilterMediatype("image")).
-		Scopes(di.FilterBlood(c.GetString("blood"))).
-		Scopes(di.FilterBracup(c.GetStrings("cup"))).
-		Scopes(di.FilterPrefixLines(c.GetString("line"))).
-		Scopes(di.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
-		Limit(4).
-		Find(&divas)
+	var list []*ormapper.Entry
+	en.PictureEntries().
+		Scopes(ani.FilterMediatype("image")).
+		Limit(c.DefaultPers).
+		Find(&list)
+
+	c.Data["Entries"] = list
+
+	var divas []*ormapper.Diva
+	// di.VideoGoddess().
+	// Scopes(di.VideoCountMoreThanZero).
+	// Scopes(di.FilterMediatype("image")).
+	// Scopes(di.FilterBlood(c.GetString("blood"))).
+	// Scopes(di.FilterBracup(c.GetStrings("cup"))).
+	// Scopes(di.FilterPrefixLines(c.GetString("line"))).
+	// Scopes(di.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+	// Limit(4).
+	// Find(&divas)
 	c.Data["Divas"] = divas
 
-	var animes []ormapper.Anime
-	ani.PictureAnimations().
-		Scopes(ani.PictureCountMoreThanZero).
-		Scopes(ani.FilterMediatype("image")).
-		Scopes(ani.FilterPrefixLines(c.GetString("line"))).
-		Scopes(ani.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
-		Limit(4).
-		Find(&animes)
+	var animes []*ormapper.Anime
+	// ani.PictureAnimations().
+	// Scopes(ani.PictureCountMoreThanZero).
+	// Scopes(ani.FilterMediatype("image")).
+	// Scopes(ani.FilterPrefixLines(c.GetString("line"))).
+	// Scopes(ani.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+	// Limit(4).
+	// Find(&animes)
 	c.Data["Animes"] = animes
 }
 

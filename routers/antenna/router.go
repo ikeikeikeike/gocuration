@@ -45,6 +45,8 @@ func init() {
 	beego.Router(`/feed/rss.xml`, &public.FeedsController{}, "get:Rss")
 	beego.Router(`/feed/atom.xml`, &public.FeedsController{}, "get:Atom")
 
+	beego.Router(`/abouts.html`, &public.AboutsController{}, "get:Index")
+
 	beego.Router(`/v1/parts.js`, &public.ApisController{}, "post:Parts")
 
 	// Admin
