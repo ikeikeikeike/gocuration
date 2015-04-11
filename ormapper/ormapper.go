@@ -50,6 +50,10 @@ func init() {
 		DB.DB().Ping()
 		DB.DB().SetMaxIdleConns(100)
 		DB.DB().SetMaxOpenConns(100)
+
+		if runmode == "dev" {
+			DB.LogMode(true)
+		}
 	default:
 		DB, err = gorm.Open("sqlite3", datasource)
 		if err != nil {
@@ -59,6 +63,5 @@ func init() {
 		DB.DB()
 	}
 
-	DB.LogMode(true)
 	DB.SingularTable(true)
 }

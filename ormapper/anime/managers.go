@@ -23,19 +23,20 @@ func FilterMediatype(mtype string) func(db *gorm.DB) *gorm.DB {
 
 func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		var conds []interface{}
-
-		for _, w := range words {
-			conds = append(conds, fmt.Sprintf("%%%s%%", w))
+		for _, word := range words {
+			if word != "" {
+				w := fmt.Sprintf("%%%s%%", word)
+				db = db.Where("anime.name like ? OR anime.kana like ?", w, w)
+			}
 		}
-		return db.Where("anime.name like ? OR anime.kana like ?", conds...)
+		return db
 	}
 }
 
 func FilterPrefixLines(line string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if line != "" {
-			db = db.Where("anime.gyou in ?", ormapper.PrefixLines[line])
+			db = db.Where("anime.gyou in (?)", ormapper.PrefixLines[line])
 		}
 		return db
 	}
@@ -47,9 +48,9 @@ func PictureAnimations() *gorm.DB {
 		Preload("Pictures").Preload("Characters").Preload("Icon").
 		Select("anime.*").
 		Joins(`
-		JOIN picture ON picture.anime_id = anime.id 
-		JOIN entry ON entry.id = picture.entry_id
-		JOIN blog ON blog.id = entry.blog_id 
+		INNER JOIN picture ON picture.anime_id = anime.id 
+		INNER JOIN entry ON entry.id = picture.entry_id
+		INNER JOIN blog ON blog.id = entry.blog_id 
 		LEFT OUTER JOIN image ON image.id = anime.icon_id
 		`).
 		Group("anime.id").

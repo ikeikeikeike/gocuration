@@ -30,9 +30,13 @@ type Diva struct {
 	Created time.Time
 	Updated time.Time
 
-	Icon   Image
+	Icon   *Image
 	IconId sql.NullInt64
 
 	VideosCount int
-	Videos      []Video
+	Videos      []*Video
+}
+
+func (m Diva) TableName() string {
+	return "diva"
 }
