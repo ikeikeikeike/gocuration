@@ -107,7 +107,7 @@ func (c *EntriesController) Show() {
 
 	id := c.Ctx.Input.Param(":id")
 	if id == "" {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 
@@ -116,7 +116,7 @@ func (c *EntriesController) Show() {
 	s.Read()
 
 	if !s.IsLiving() {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 
@@ -161,7 +161,7 @@ func (c *EntriesController) Viewer() {
 
 	id := c.Ctx.Input.Param(":id")
 	if id == "" {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 
@@ -170,7 +170,7 @@ func (c *EntriesController) Viewer() {
 	s.Read()
 
 	if !s.IsLiving() {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 

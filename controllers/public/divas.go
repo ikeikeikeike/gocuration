@@ -40,14 +40,14 @@ func (c *DivasController) Show() {
 
 	name := c.Ctx.Input.Param(":name")
 	if name == "" {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 
 	s := &models.Diva{Name: name}
 	s.Read("Name")
 	if s.Id <= 0 {
-		c.Ctx.Abort(404, "404 NotFound")
+		c.Ctx.Abort(404, "404")
 		return
 	}
 

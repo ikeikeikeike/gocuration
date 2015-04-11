@@ -70,13 +70,13 @@ func (c *UsersController) MailConfirm() {
 
 	tu, err := changemail.ReceiveChangeMail(token)
 	if err != nil {
-		c.Ctx.Abort(403, err.Error())
+		c.Ctx.Abort(403, "403")
 		return
 	}
 
 	user, err := changemail.RegisterMail(tu, c.Userinfo)
 	if err != nil || user.Id < 1 {
-		c.Ctx.Abort(403, err.Error())
+		c.Ctx.Abort(403, "403")
 		return
 	}
 
@@ -97,7 +97,7 @@ func (c *UsersController) Blogs() {
 func (c *UsersController) Blog() {
 	id := c.Ctx.Input.Param(":id")
 	if id == "" {
-		c.Ctx.Abort(403, "403 Forbidden")
+		c.Ctx.Abort(403, "403")
 		return
 	}
 	uid, _ := convert.StrTo(id).Int64()
@@ -109,7 +109,7 @@ func (c *UsersController) Blog() {
 	}
 	b, ok := c.Data["Blog"]
 	if !ok {
-		c.Ctx.Abort(403, "403 Forbidden")
+		c.Ctx.Abort(403, "403")
 		return
 	}
 
@@ -227,7 +227,7 @@ func (c *UsersController) BlogRemove() {
 
 	id := c.GetString("id")
 	if id == "" {
-		c.Ctx.Abort(403, "403 Forbidden")
+		c.Ctx.Abort(403, "403")
 		return
 	}
 
@@ -252,7 +252,7 @@ func (c *UsersController) BlogRemove() {
 		}
 	}
 
-	c.Ctx.Abort(403, "403 Forbidden")
+	c.Ctx.Abort(403, "403")
 }
 
 func (c *UsersController) mailConfirmUrl(token string) string {
