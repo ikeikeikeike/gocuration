@@ -13,12 +13,12 @@ type Score struct {
 	Created time.Time
 	Updated time.Time
 
-	Blog   Blog
+	Blog   *Blog
 	BlogId sql.NullInt64
 
-	Entry   Entry
+	Entry   *Entry
 	EntryId sql.NullInt64
 
-	Summary   Summary
+	Summary   *Summary
 	SummaryId sql.NullInt64
 }

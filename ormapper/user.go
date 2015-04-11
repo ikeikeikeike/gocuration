@@ -13,5 +13,5 @@ type User struct {
 	Created time.Time
 	Updated time.Time
 
-	Blogs []Blog
+	Blogs []*Blog
 }

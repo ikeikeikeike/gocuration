@@ -25,12 +25,12 @@ type Blog struct {
 	Created time.Time
 	Updated time.Time
 
-	User   User
+	User   *User
 	UserId sql.NullInt64
 
-	Icon   Image
+	Icon   *Image
 	IconId sql.NullInt64
 
-	Scores  []Score
-	Entries []Entry
+	Scores  []*Score
+	Entries []*Entry
 }

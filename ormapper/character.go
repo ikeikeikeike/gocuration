@@ -31,13 +31,13 @@ type Character struct {
 	Created time.Time
 	Updated time.Time
 
-	Icon   Image
+	Icon   *Image
 	IconId sql.NullInt64
 
 	Product string
-	Anime   Anime
+	Anime   *Anime
 	AnimeId sql.NullInt64
 
 	PicturesCount int
-	Pictures      []Picture
+	Pictures      []*Picture
 }

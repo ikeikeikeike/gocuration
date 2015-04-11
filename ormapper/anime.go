@@ -25,11 +25,11 @@ type Anime struct {
 	Created time.Time
 	Updated time.Time
 
-	Icon   Image
+	Icon   *Image
 	IconId sql.NullInt64
 
-	Characters []Character
+	Characters []*Character
 
-	Pictures      []Picture
+	Pictures      []*Picture
 	PicturesCount int
 }

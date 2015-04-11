@@ -20,5 +20,5 @@ type Image struct {
 	Updated time.Time
 
 	Picture   *Picture
-	PictureId sql.NullInt64
+	PictureId sql.NullInt64 // `gorm:"column:picture_id"`
 }

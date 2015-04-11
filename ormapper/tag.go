@@ -15,8 +15,12 @@ type Tag struct {
 	Created time.Time
 	Updated time.Time
 
-	Image   Image
+	Image   *Image
 	ImageId sql.NullInt64
 
-	Entries []Entry
+	Entries []*Entry
+}
+
+func (m Tag) TableName() string {
+	return "tag"
 }
