@@ -15,11 +15,11 @@ type Video struct {
 	Created time.Time
 	Updated time.Time
 
-	Entry   Entry
+	Entry   *Entry
 	EntryId sql.NullInt64
 
-	Site   Site
+	Site   *Site
 	SiteId sql.NullInt64
 
-	Divas []Diva `gorm:"many2many:video_diva;"`
+	Divas []*Diva `gorm:"many2many:video_diva;"`
 }

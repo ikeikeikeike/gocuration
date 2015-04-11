@@ -16,8 +16,8 @@ type Site struct {
 	Created time.Time
 	Updated time.Time
 
-	Icon   Image
+	Icon   *Image
 	IconId sql.NullInt64
 
-	Videos []Video
+	Videos []*Video
 }

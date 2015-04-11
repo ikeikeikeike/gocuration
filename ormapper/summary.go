@@ -13,8 +13,8 @@ type Summary struct {
 	Created time.Time
 	Updated time.Time
 
-	Entry   Entry
+	Entry   *Entry
 	EntryId sql.NullInt64
 
-	Scores []Score
+	Scores []*Score
 }
