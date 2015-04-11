@@ -21,6 +21,6 @@ func SendStackTrace(msg []string) {
 	m.SendMail(
 		beego.AppConfig.String("logMaildst"),
 		fmt.Sprintf("[%s] Error mail", beego.RunMode),
-		strings.Join(msg, "\n"),
+		strings.Join(msg, "<br />"),
 	)
 }
