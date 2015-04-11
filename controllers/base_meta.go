@@ -6,6 +6,7 @@ import (
 )
 
 type Meta struct {
+	AppName         string
 	Copyright       string
 	Author          string
 	Email           string
@@ -31,6 +32,7 @@ type Meta struct {
 
 func NewMeta() *Meta {
 	return &Meta{
+		AppName:         beego.AppConfig.String("AppName"),
 		Copyright:       beego.AppConfig.String("SiteName"),
 		Author:          beego.AppConfig.String("Author"),
 		Email:           beego.AppConfig.String("Email"),

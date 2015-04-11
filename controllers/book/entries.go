@@ -2,11 +2,10 @@ package book
 
 import (
 	"bitbucket.org/ikeikeikeike/antenna/models"
-	"bitbucket.org/ikeikeikeike/antenna/models/anime"
-	"bitbucket.org/ikeikeikeike/antenna/models/diva"
 	"bitbucket.org/ikeikeikeike/antenna/models/summary"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
 	ani "bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
+	di "bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -26,41 +25,48 @@ func (c *EntriesController) Home() {
 	c.TplNames = "book/entries/home.tpl"
 
 	var (
-		divas     []*models.Diva
-		animes    []*models.Anime
+		// divas []*models.Diva
+		// animes    []*models.Anime
 		entries   []*models.Entry
 		summaries []*models.Summary
-		pers      = c.DefaultPers
+		// pers      = c.DefaultPers
 	)
 
 	// qs := c.SetNameKana(c.SetBracup(c.SetBlood(c.SetPrefixLines(diva.StarringDivas().RelatedSel(), ""), ""), ""))
 	// c.SetImage(qs, "videos__video__entry__").Limit(4).All(&divas)
 	// c.SetImage(c.SetNameKana(c.SetPrefixLines(anime.StarringAnimes().RelatedSel(), "")), "pictures__entry__").Limit(4).All(&animes)
 
-	diva.MediatypedDivas("image", 4, &divas)
-	anime.MediatypedAnimes("image", 4, &animes)
+	// diva.MediatypedDivas("image", 4, &divas)
+	// anime.MediatypedAnimes("image", 4, &animes)
 
-	c.SetImage(c.SetAdvancedSearch(models.Entries().RelatedSel(), ""), "").Limit(pers).All(&entries)
-	c.SetImage(c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
+	// c.SetImage(c.SetAdvancedSearch(models.Entries().RelatedSel(), ""), "").Limit(pers).All(&entries)
+	// c.SetImage(c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
 
-	c.Data["Divas"] = divas
-	c.Data["Animes"] = animes
+	// c.Data["Animes"] = animes
 	c.Data["Entries"] = entries
 	c.Data["Summaries"] = summaries
 
-	db := ani.PictureAnimations().
-		Scopes(ani.PictureCountMoreThanZero, ani.FilterMediatype("image"))
+	var divas []ormapper.Diva
+	di.VideoGoddess().
+		Scopes(di.VideoCountMoreThanZero).
+		Scopes(di.FilterMediatype("image")).
+		Scopes(di.FilterBlood(c.GetString("blood"))).
+		Scopes(di.FilterBracup(c.GetStrings("cup"))).
+		Scopes(di.FilterPrefixLines(c.GetString("line"))).
+		Scopes(di.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(4).
+		Find(&divas)
+	c.Data["Divas"] = divas
 
-	v := c.GetString("q")
-	if v != "" {
-		db = db.Scopes(ani.FilterNameKana(convert.StrTo(v).MultiWord()))
-	}
-
-	var list []ormapper.Anime
-
-	db.Limit(4).Find(&list)
-
-	c.Data["Animes"] = list
+	var animes []ormapper.Anime
+	ani.PictureAnimations().
+		Scopes(ani.PictureCountMoreThanZero).
+		Scopes(ani.FilterMediatype("image")).
+		Scopes(ani.FilterPrefixLines(c.GetString("line"))).
+		Scopes(ani.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(4).
+		Find(&animes)
+	c.Data["Animes"] = animes
 }
 
 func (c *EntriesController) News() {
