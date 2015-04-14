@@ -15,12 +15,6 @@ func VideoCountMoreThanZero(db *gorm.DB) *gorm.DB {
 
 // Where(args) scope
 
-func FilterMediatype(mtype string) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("blog.mediatype = ?", mtype)
-	}
-}
-
 func FilterBracupLines(cup string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if cup != "" {
@@ -67,20 +61,4 @@ func FilterPrefixLines(line string) func(db *gorm.DB) *gorm.DB {
 		}
 		return db
 	}
-}
-
-// Has video record list
-func VideoGoddess() *gorm.DB {
-	return ormapper.DB.Table("diva").
-		Preload("Videos").Preload("Icon").
-		Select("diva.*").
-		Joins(`
-		INNER JOIN video_diva ON video_diva.diva_id = diva.id 
-		INNER JOIN video ON video.id = video_diva.video_id
-		INNER JOIN entry ON entry.id = video.entry_id
-		INNER JOIN blog ON blog.id = entry.blog_id 
-		LEFT OUTER JOIN image ON image.id = diva.icon_id
-		`).
-		Group("diva.id").
-		Order("diva.videos_count DESC")
 }
