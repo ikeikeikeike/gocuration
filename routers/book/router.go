@@ -18,4 +18,10 @@ func init() {
 	beego.Router(`/book/viewer:id([0-9]+)/:title(.*)?`, &book.EntriesController{}, "get:Viewer")
 
 	beego.Router("/search.html", &book.EntriesController{}, "get:Search")
+
+	beego.Router("/tags.html", &book.TagsController{}, "get:Index")
+	beego.Router(`/tag/:name`, &book.TagsController{}, "get:Show")
+
+	beego.Router("/animes.html", &book.AnimesController{}, "get:Index")
+	beego.Router(`/anime/:name`, &book.AnimesController{}, "get,post:Show")
 }

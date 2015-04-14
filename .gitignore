@@ -28,6 +28,7 @@ _testmain.go
 *.exe
 /antenna
 /book
+/video
 /bin/anime
 /bin/character
 /bin/diva
@@ -49,3 +50,4 @@ parts.orig.css
 /.hg
 /.hgignore
 /book.go
+/video.go
