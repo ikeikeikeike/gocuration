@@ -6,7 +6,6 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
-	"bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -52,16 +51,6 @@ func (c *EntriesController) Home() {
 	c.Data["Entries"] = entries
 
 	var divas []*ormapper.Diva
-	ormapper.VideoGoddess().
-		Scopes(blog.FilterMediatype("image")).
-		Scopes(diva.VideoCountMoreThanZero).
-		Scopes(diva.FilterBlood(c.GetString("blood"))).
-		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
-		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
-		Scopes(diva.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
-		Limit(4).
-		Order("diva.videos_count DESC").
-		Find(&divas)
 	c.Data["Divas"] = divas
 
 	var animes []*ormapper.Anime
@@ -171,6 +160,9 @@ func (c *EntriesController) Show() {
 		if t.Name != "" {
 			in = append(in, t.Name)
 		}
+	}
+	if len(in) <= 0 {
+		in = append(in, "同人")
 	}
 	ormapper.PictureShowSummaries().
 		Scopes(blog.FilterMediatype("image")).

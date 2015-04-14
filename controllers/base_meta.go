@@ -7,6 +7,8 @@ import (
 
 type Meta struct {
 	AppName         string
+	AntennaURL      string
+	BookURL         string
 	Copyright       string
 	Author          string
 	Email           string
@@ -14,6 +16,7 @@ type Meta struct {
 	Description     string
 	ApplicationName string
 	Domain          string
+	BaseDomain      string
 	Host            string
 	Url             string
 	Type            string
@@ -33,6 +36,8 @@ type Meta struct {
 func NewMeta() *Meta {
 	return &Meta{
 		AppName:         beego.AppConfig.String("AppName"),
+		AntennaURL:      beego.AppConfig.String("antennaurl"),
+		BookURL:         beego.AppConfig.String("bookurl"),
 		Copyright:       beego.AppConfig.String("SiteName"),
 		Author:          beego.AppConfig.String("Author"),
 		Email:           beego.AppConfig.String("Email"),
@@ -40,6 +45,7 @@ func NewMeta() *Meta {
 		Description:     beego.AppConfig.String("Description"),
 		ApplicationName: beego.AppConfig.String("SiteName"),
 		Domain:          beego.AppConfig.String("domain"),
+		BaseDomain:      beego.AppConfig.String("basedomain"),
 		Host:            "",
 		Url:             "",
 		Type:            "article",
