@@ -40,7 +40,7 @@ type Anime struct {
 func PictureAnimations() *gorm.DB {
 	return DB.Table("anime").
 		Preload("Pictures").Preload("Characters").Preload("Icon").
-		Select("anime.*").
+		Select("anime.*, count(*) as pictures_count").
 		Joins(`
 		INNER JOIN picture ON picture.anime_id = anime.id 
 		INNER JOIN entry ON entry.id = picture.entry_id

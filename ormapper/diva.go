@@ -47,7 +47,7 @@ func (m Diva) TableName() string {
 func VideoGoddess() *gorm.DB {
 	return DB.Table("diva").
 		Preload("Videos").Preload("Icon").
-		Select("diva.*").
+		Select("diva.*, count(*) as videos_count").
 		Joins(`
 		INNER JOIN video_diva ON video_diva.diva_id = diva.id 
 		INNER JOIN video ON video.id = video_diva.video_id
