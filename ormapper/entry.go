@@ -2,7 +2,10 @@ package ormapper
 
 import (
 	"database/sql"
+	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Entry struct {
@@ -35,13 +38,35 @@ type Entry struct {
 	Scores []*Score
 }
 
-func (m *Entry) RelLoader() {
-	if m.Summary != nil {
-		DB.Model(&m).Preload("Entry").Preload("Scores").
-			Related(&m.Summary)
+// Is liveing entry?
+func (m *Entry) IsLiving() bool {
+	if m.Id <= 0 || m.Blog == nil {
+		return false
 	}
+	return true
+}
+
+func (m *Entry) CommaTags() string {
+	tags := []string{}
+	if m.Tags != nil {
+		for _, tag := range m.Tags {
+			if tag.Name != "" {
+				tags = append(tags, tag.Name)
+			}
+		}
+	}
+	return strings.Join(tags, ",")
+}
+
+func (m *Entry) RelLoader() {
+	// if m.Summary != nil {
+	// DB.Model(&m).Preload("Entry").Preload("Scores").
+	// Related(&m.Summary)
+	// }
 	if m.Blog != nil {
-		DB.Model(&m).Preload("User").Preload("Icon").Preload("Scores").Preload("Entries").
+		DB.Model(&m).Preload("User").Preload("Icon").
+			// Preload("Scores").
+			// Preload("Entries").
 			Related(&m.Blog)
 	}
 	if m.Video != nil {
@@ -53,10 +78,12 @@ func (m *Entry) RelLoader() {
 		DB.Model(&m).Preload("Entry").Preload("Anime").Preload("Images").
 			//Preload("Characters").
 			Related(&m.Picture)
+
+		m.Picture.NewsLoader()
 	}
 
-	DB.Model(&m).Preload("Entry").Preload("Blog").Preload("Summary").
-		Related(&m.Scores)
+	// DB.Model(&m).Preload("Entry").Preload("Blog").Preload("Summary").
+	// Related(&m.Scores)
 
 	DB.Model(&m).Preload("Image").Preload("Entries").Association("Tags").
 		Find(&m.Tags)
@@ -64,4 +91,42 @@ func (m *Entry) RelLoader() {
 	DB.Model(&m).Preload("Picture").Association("Images").
 		Find(&m.Images)
 
+}
+
+func (m *Entry) NewsLoader() {
+	if m.Blog != nil {
+		DB.Model(&m).Preload("Icon").Related(&m.Blog)
+	}
+	if m.Video != nil {
+		DB.Model(&m).Preload("Site").Related(&m.Video)
+	}
+	if m.Picture != nil {
+		DB.Model(&m).Preload("Anime").Preload("Images").
+			Related(&m.Picture)
+		m.Picture.NewsLoader()
+	}
+	DB.Model(&m).Association("Tags").Find(&m.Tags)
+	DB.Model(&m).Association("Images").Find(&m.Images)
+}
+
+func (m *Entry) PictureShowLoader() {
+	if m.Blog != nil {
+		DB.Model(&m).Preload("Icon").Related(&m.Blog)
+		m.Blog.PictureShowLoader()
+	}
+
+	m.NewsLoader()
+}
+
+func PictureEntries() *gorm.DB {
+	return DB.Table("entry").
+		Preload("Picture").Preload("Video").Preload("Summary").Preload("Blog").
+		Preload("Scores").
+		// Preload("Tags").Preload("Images"). XXX: not supported relation
+		Select("entry.*").
+		Joins(`
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		INNER JOIN picture ON entry.id = picture.entry_id
+		LEFT OUTER JOIN anime ON anime.id = picture.anime_id
+		`)
 }

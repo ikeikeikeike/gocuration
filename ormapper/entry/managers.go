@@ -1,19 +1,21 @@
 package entry
 
 import (
-	"bitbucket.org/ikeikeikeike/antenna/ormapper"
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
-func PictureEntries() *gorm.DB {
-	return ormapper.DB.Table("entry").
-		Preload("Picture").Preload("Video").Preload("Summary").Preload("Blog").
-		Preload("Scores").
-		// Preload("Tags").Preload("Images"). XXX: not supported relation
-		Select("entry.*").
-		Joins(`
-		INNER JOIN blog ON blog.id = entry.blog_id 
-		INNER JOIN picture ON entry.id = picture.entry_id
-		`).
-		Order("entry.id DESC")
+func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		for _, word := range words {
+			if word != "" {
+				w := fmt.Sprintf("%%%s%%", word)
+				q := "diva.name  like ? OR diva.kana  like ? OR "
+				q += "anime.name like ? OR anime.kana like ?"
+				db = db.Where(q, w, w, w, w)
+			}
+		}
+		return db
+	}
 }
