@@ -45,6 +45,12 @@ func (c *TagsController) Show() {
 
 	s := &models.Tag{Name: name}
 	s.Read("Name")
+
+	if s == nil || s.Id <= 0 {
+		c.Abort("404")
+		return
+	}
+
 	s.LoadRelated()
 	c.Data["Tag"] = s
 
