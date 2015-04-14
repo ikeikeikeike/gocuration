@@ -1,11 +1,12 @@
 package book
 
 import (
-	"bitbucket.org/ikeikeikeike/antenna/models"
-	"bitbucket.org/ikeikeikeike/antenna/models/summary"
+	"fmt"
+
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
-	ani "bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
-	en "bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -24,61 +25,77 @@ func (c *EntriesController) NestFinish() {
 func (c *EntriesController) Home() {
 	c.TplNames = "book/entries/home.tpl"
 
-	// var pers = c.DefaultPers
-
-	// var entries []*models.Entry
-	// c.SetImage(c.SetAdvancedSearch(models.PictureEntries().RelatedSel(), ""), "").Limit(pers).All(&entries)
-	// c.Data["Entries"] = entries
-
-	var summaries []*models.Summary
-
-	// c.SetImage(c.SetAdvancedSearch(models.PictureSummaries().RelatedSel(), "entry__").RelatedSel(), "entry__").Limit(pers).All(&summaries)
+	var summaries []*ormapper.Summary
+	ormapper.PictureSummaries().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(c.DefaultPers).
+		Order("summary.sort DESC").
+		Find(&summaries)
+	for _, s := range summaries {
+		s.NewsLoader()
+	}
 	c.Data["Summaries"] = summaries
 
-	var list []*ormapper.Entry
-	en.PictureEntries().
-		Scopes(ani.FilterMediatype("image")).
+	var entries []*ormapper.Entry
+	ormapper.PictureEntries().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
 		Limit(c.DefaultPers).
-		Find(&list)
-
-	c.Data["Entries"] = list
+		Order("entry.id DESC").
+		Find(&entries)
+	for _, e := range entries {
+		e.NewsLoader()
+	}
+	c.Data["Entries"] = entries
 
 	var divas []*ormapper.Diva
-	// di.VideoGoddess().
-	// Scopes(di.VideoCountMoreThanZero).
-	// Scopes(di.FilterMediatype("image")).
-	// Scopes(di.FilterBlood(c.GetString("blood"))).
-	// Scopes(di.FilterBracup(c.GetStrings("cup"))).
-	// Scopes(di.FilterPrefixLines(c.GetString("line"))).
-	// Scopes(di.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
-	// Limit(4).
-	// Find(&divas)
+	ormapper.VideoGoddess().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(diva.VideoCountMoreThanZero).
+		Scopes(diva.FilterBlood(c.GetString("blood"))).
+		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
+		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
+		Scopes(diva.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(4).
+		Order("diva.videos_count DESC").
+		Find(&divas)
 	c.Data["Divas"] = divas
 
 	var animes []*ormapper.Anime
-	// ani.PictureAnimations().
-	// Scopes(ani.PictureCountMoreThanZero).
-	// Scopes(ani.FilterMediatype("image")).
-	// Scopes(ani.FilterPrefixLines(c.GetString("line"))).
-	// Scopes(ani.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
-	// Limit(4).
-	// Find(&animes)
+	ormapper.PictureAnimations().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.PictureCountMoreThanZero).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(4).
+		Order("anime.pictures_count DESC").
+		Find(&animes)
 	c.Data["Animes"] = animes
 }
 
 func (c *EntriesController) News() {
-	c.TplNames = "public/entries/news.tpl"
+	c.TplNames = "book/entries/news.tpl"
 
-	pers := c.DefaultPers
-	qs := c.SetAdvancedSearch(models.Entries().RelatedSel(), "")
+	db := ormapper.PictureEntries().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
 
-	cnt, _ := models.CountObjects(qs)
-	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
+	var count int64
+	db.Count(&count)
 
-	qs = qs.Limit(pers, pager.Offset())
+	pager := pagination.SetPaginator(c.Ctx, c.DefaultPers, count)
+	db = db.Limit(c.DefaultPers).Offset(pager.Offset())
 
-	var entries []*models.Entry
-	models.ListObjects(qs, &entries)
+	var entries []*ormapper.Entry
+	db.Order("entry.id DESC").Find(&entries)
+
+	for _, e := range entries {
+		e.NewsLoader()
+	}
 
 	c.Data["QURL"] = ""
 	c.Data["Entries"] = entries
@@ -87,16 +104,23 @@ func (c *EntriesController) News() {
 func (c *EntriesController) Hots() {
 	c.TplNames = "book/entries/hots.tpl"
 
-	pers := c.DefaultPers
-	qs := c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__")
+	db := ormapper.PictureSummaries().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
 
-	cnt, _ := models.CountObjects(qs)
-	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
+	var count int64
+	db.Count(&count)
 
-	qs = qs.Limit(pers, pager.Offset())
+	pager := pagination.SetPaginator(c.Ctx, c.DefaultPers, count)
+	db = db.Limit(c.DefaultPers).Offset(pager.Offset())
 
-	var summaries []*models.Summary
-	models.ListObjects(qs, &summaries)
+	var summaries []*ormapper.Summary
+	db.Order("summary.sort DESC").Find(&summaries)
+
+	for _, s := range summaries {
+		s.NewsLoader()
+	}
 
 	c.Data["QURL"] = ""
 	c.Data["Summaries"] = summaries
@@ -112,43 +136,54 @@ func (c *EntriesController) Show() {
 	}
 
 	uid, _ := convert.StrTo(id).Int64()
-	s := &models.Entry{Id: uid}
-	s.Read()
 
-	if !s.IsLiving() {
+	m := &ormapper.Entry{Id: uid}
+	ormapper.DB.
+		Preload("Picture").Preload("Video").Preload("Blog").
+		First(m)
+
+	if !m.IsLiving() {
 		c.Ctx.Abort(404, "404")
 		return
 	}
 
+	m.PictureShowLoader()
+
 	var (
-		in         []string
-		divas      []*models.Diva
-		animes     []*models.Anime
-		summaries  []*models.Summary
-		characters []*models.Character
+		divas      []*ormapper.Diva
+		animes     []*ormapper.Anime
+		summaries  []*ormapper.Summary
+		characters []*ormapper.Character
 	)
 
-	s.Blog.LoadRelated()
-	if s.Video != nil {
-		s.Video.LoadRelated()
-		divas = s.Video.Divas
+	if m.Video != nil {
+		divas = m.Video.Divas
 	}
-	if s.Picture != nil {
-		s.Picture.LoadRelated()
-		if s.Picture.Anime != nil {
-			animes = []*models.Anime{s.Picture.Anime}
+	if m.Picture != nil {
+		characters = m.Picture.Characters
+		if m.Picture.Anime != nil {
+			animes = []*ormapper.Anime{m.Picture.Anime}
 		}
-		characters = s.Picture.Characters
 	}
 
-	for _, t := range s.Tags {
+	var in []string
+	for _, t := range m.Tags {
 		if t.Name != "" {
 			in = append(in, t.Name)
 		}
 	}
-	summary.RelatedSummaries(s.Id, in, &summaries)
+	ormapper.PictureShowSummaries().
+		Scopes(blog.FilterMediatype("image")).
+		Where("entry.id != ?", m.Id).
+		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
+		Limit(3).
+		Order("summary.sort DESC").
+		Find(&summaries)
+	for _, s := range summaries {
+		s.ShowLoader()
+	}
 
-	c.Data["Entry"] = s
+	c.Data["Entry"] = m
 	c.Data["Divas"] = divas
 	c.Data["Animes"] = animes
 	c.Data["Summaries"] = summaries
@@ -166,18 +201,20 @@ func (c *EntriesController) Viewer() {
 	}
 
 	uid, _ := convert.StrTo(id).Int64()
-	s := &models.Entry{Id: uid}
-	s.Read()
 
-	if !s.IsLiving() {
+	m := &ormapper.Entry{Id: uid}
+	ormapper.DB.
+		Preload("Picture").Preload("Video").Preload("Blog").
+		First(m)
+
+	if !m.IsLiving() {
 		c.Ctx.Abort(404, "404")
 		return
 	}
 
-	s.Blog.LoadRelated()
-	s.Picture.LoadRelated()
+	m.PictureShowLoader()
 
-	c.Data["Entry"] = s
+	c.Data["Entry"] = m
 }
 
 func (c *EntriesController) Search() {
