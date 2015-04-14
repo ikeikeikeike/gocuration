@@ -13,14 +13,6 @@ func PictureCountMoreThanZero(db *gorm.DB) *gorm.DB {
 	return db.Where("anime.pictures_count > ?", 0)
 }
 
-// Where(args) scope
-
-func FilterMediatype(mtype string) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("blog.mediatype = ?", mtype)
-	}
-}
-
 func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		for _, word := range words {
@@ -40,19 +32,4 @@ func FilterPrefixLines(line string) func(db *gorm.DB) *gorm.DB {
 		}
 		return db
 	}
-}
-
-// Choiced mediatyped animation list
-func PictureAnimations() *gorm.DB {
-	return ormapper.DB.Table("anime").
-		Preload("Pictures").Preload("Characters").Preload("Icon").
-		Select("anime.*").
-		Joins(`
-		INNER JOIN picture ON picture.anime_id = anime.id 
-		INNER JOIN entry ON entry.id = picture.entry_id
-		INNER JOIN blog ON blog.id = entry.blog_id 
-		LEFT OUTER JOIN image ON image.id = anime.icon_id
-		`).
-		Group("anime.id").
-		Order("anime.pictures_count DESC")
 }
