@@ -17,9 +17,9 @@ type Anime struct {
 	Id int64 `orm:"auto"`
 
 	Name  string `orm:"size(128);unique"` // gin index
-	Alias string `orm:"size(128);null"`   // gin index
+	Alias string `orm:"size(128);null"`   // gin index < まだindexつけてない
 
-	Kana   string `orm:"size(128);null"`
+	Kana   string `orm:"size(128);null"` // gin index
 	Romaji string `orm:"size(128);null"`
 	Gyou   string `orm:"size(6);index;null"`
 

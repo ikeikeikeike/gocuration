@@ -14,8 +14,8 @@ import (
 type Diva struct {
 	Id int64 `orm:"auto"`
 
-	Name   string `orm:"size(128);unique"`
-	Kana   string `orm:"size(128);null"`
+	Name   string `orm:"size(128);unique"` // gin index
+	Kana   string `orm:"size(128);null"`   // gin index
 	Romaji string `orm:"size(128);null"`
 	Gyou   string `orm:"size(6);index;null"`
 

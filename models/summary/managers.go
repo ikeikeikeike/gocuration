@@ -35,6 +35,6 @@ func RelatedSummaries(sid int64, in []string, summaries interface{}) {
 		e.id != '%d'
 	ORDER BY 
 		s.sort DESC 
-	LIMIT 3`, names, names[0], sid)
+	LIMIT 3`, names, in[0], sid)
 	orm.NewOrm().Raw(q).QueryRows(summaries)
 }
