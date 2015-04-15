@@ -19,3 +19,14 @@ func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
 		return db
 	}
 }
+
+func FilterQ(words []string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		for _, word := range words {
+			if word != "" {
+				db = db.Where("entry.q like ?", fmt.Sprintf("%%%s%%", word))
+			}
+		}
+		return db
+	}
+}

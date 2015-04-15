@@ -6,6 +6,18 @@ import "github.com/jinzhu/gorm"
 
 func FilterMediatype(mtype string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("blog.mediatype = ?", mtype)
+		if mtype != "" {
+			db = db.Where("blog.mediatype = ?", mtype)
+		}
+		return db
+	}
+}
+
+func FilterAdsensetype(adtype string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if adtype != "" {
+			db = db.Where("blog.adsensetype = ?", adtype)
+		}
+		return db
 	}
 }

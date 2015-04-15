@@ -24,4 +24,8 @@ func init() {
 
 	beego.Router("/animes.html", &book.AnimesController{}, "get:Index")
 	beego.Router(`/anime/:name`, &book.AnimesController{}, "get,post:Show")
+
+	beego.Router(`/feed/rdf.xml`, &book.FeedsController{}, "get:Rdf")
+	beego.Router(`/feed/rss.xml`, &book.FeedsController{}, "get:Rss")
+	beego.Router(`/feed/atom.xml`, &book.FeedsController{}, "get:Atom")
 }

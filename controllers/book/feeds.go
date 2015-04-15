@@ -1,12 +1,12 @@
-package public
+package book
 
 import (
 	"fmt"
 	"net/url"
 	"time"
 
-	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/image"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper"
 
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/gopkg/convert"
@@ -38,15 +38,16 @@ func (c *FeedsController) Rss() {
 
 	var (
 		src       string
-		summaries []*models.Summary
+		summaries []*ormapper.Summary
 	)
-	qs := models.Summaries().RelatedSel().Limit(10)
-	// qs = qs.Filter("entry__scores__name", "twitter").OrderBy("entry__scores__count")
-	models.ListObjects(qs, &summaries)
+
+	ormapper.PictureSummaries().
+		Limit(10).
+		Find(&summaries)
 
 	for _, summary := range summaries {
+		summary.NewsLoader()
 		e := summary.Entry
-		e.LoadRelated()
 
 		path := c.UrlFor("EntriesController.Show",
 			":id", convert.ToStr(e.Id),
