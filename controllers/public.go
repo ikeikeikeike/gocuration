@@ -125,7 +125,10 @@ var PrefixLines = map[string][]string{
 func (c *PublicController) SetPrefixLines(qs orm.QuerySeter, q string) orm.QuerySeter {
 	v := c.GetString("line")
 	if v != "" {
-		qs = qs.Filter(q+"gyou__in", PrefixLines[v])
+		lines, ok := PrefixLines[v]
+		if ok {
+			qs = qs.Filter(q+"gyou__in", lines)
+		}
 	}
 	return qs
 }
@@ -143,7 +146,10 @@ var BracupLines = map[string][]string{
 func (c *PublicController) SetBracupLines(qs orm.QuerySeter) orm.QuerySeter {
 	v := c.GetString("cup")
 	if v != "" {
-		qs = qs.Filter("bracup__in", BracupLines[v])
+		lines, ok := BracupLines[v]
+		if ok {
+			qs = qs.Filter("bracup__in", lines)
+		}
 	}
 	return qs
 }

@@ -191,16 +191,18 @@ func (c *LoginController) Signup() {
 
 func (c *LoginController) SignupConfirm() {
 	token := c.GetString("token")
+	msg := `tokenが古いまたは正しくありません。
+再度ご登録頂いてtokenの再発行または、すでに登録処理が完了している可能性があります。`
 
 	tu, err := signup.ReceiveSignupMail(token)
 	if err != nil {
-		c.Ctx.Abort(403, "403")
+		c.Ctx.WriteString(msg)
 		return
 	}
 
 	user, err := signup.RegisterUser(tu)
 	if err != nil || user.Id < 1 {
-		c.Ctx.Abort(403, "403")
+		c.Ctx.WriteString(msg)
 		return
 	}
 

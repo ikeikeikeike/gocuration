@@ -28,7 +28,10 @@ func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
 func FilterPrefixLines(line string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if line != "" {
-			db = db.Where("anime.gyou in (?)", ormapper.PrefixLines[line])
+			in, ok := ormapper.PrefixLines[line]
+			if ok {
+				db = db.Where("anime.gyou in (?)", in)
+			}
 		}
 		return db
 	}

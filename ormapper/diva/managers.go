@@ -18,7 +18,10 @@ func VideoCountMoreThanZero(db *gorm.DB) *gorm.DB {
 func FilterBracupLines(cup string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if cup != "" {
-			db = db.Where("diva.bracup in (?)", ormapper.BracupLines[cup])
+			in, ok := ormapper.BracupLines[cup]
+			if ok {
+				db = db.Where("diva.bracup in (?)", in)
+			}
 		}
 		return db
 	}
@@ -57,7 +60,10 @@ func FilterNameKana(words []string) func(db *gorm.DB) *gorm.DB {
 func FilterPrefixLines(line string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if line != "" {
-			db = db.Where("diva.gyou in (?)", ormapper.PrefixLines[line])
+			in, ok := ormapper.PrefixLines[line]
+			if ok {
+				db = db.Where("diva.gyou in (?)", in)
+			}
 		}
 		return db
 	}
