@@ -171,8 +171,9 @@ func (c *EntriesController) Show() {
 		Scopes(blog.FilterMediatype("image")).
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
-		Limit(3).
+		Group("summary.id").
 		Order("summary.sort DESC").
+		Limit(3).
 		Find(&summaries)
 	for _, s := range summaries {
 		s.ShowLoader()
