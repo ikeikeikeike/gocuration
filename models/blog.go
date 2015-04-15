@@ -18,9 +18,11 @@ type Blog struct {
 	Mediatype   string `orm:"size(16)" form:"Mediatype" valid:"Required;Match(/^(movie|image)$/)"`
 	Adsensetype string `orm:"size(16)" form:"Adsensetype" valid:"Required;Match(/^(2d|3d)$/)"`
 
-	VerifyLink  int `orm:"default(1);null" form:"VerifyLink" valid:"Range(0,3)"`
-	VerifyRss   int `orm:"default(1);null" form:"VerifyRss" valid:"Range(0,3)"`
-	VerifyParts int `orm:"default(1);null" form:"VerifyParts" valid:"Range(0,3)"`
+	VerifyParts    int `orm:"default(1);null" form:"VerifyParts" valid:"Range(0,3)"`
+	VerifyRss      int `orm:"default(1);null" form:"VerifyRss" valid:"Range(0,3)"`
+	VerifyLink     int `orm:"default(1);null" form:"VerifyLink" valid:"Range(0,3)"`
+	VerifyBookRss  int `orm:"default(1);null" form:"VerifyBookRss" valid:"Range(0,3)"`
+	VerifyBookLink int `orm:"default(1);null" form:"VerifyBookLink" valid:"Range(0,3)"`
 
 	IsPenalty bool `orm:"default(0)"`
 
@@ -39,13 +41,21 @@ type Blog struct {
 func (m *Blog) VerifyScore() int {
 	var score int = 1
 
-	if m.VerifyLink >= 3 {
+	if m.VerifyParts >= 3 {
+		score++
+		score++
 		score++
 	}
 	if m.VerifyRss >= 3 {
 		score++
 	}
-	if m.VerifyParts >= 3 {
+	if m.VerifyLink >= 3 {
+		score++
+	}
+	if m.VerifyBookRss >= 3 {
+		score++
+	}
+	if m.VerifyBookLink >= 3 {
 		score++
 	}
 	return score
