@@ -130,3 +130,15 @@ func PictureEntries() *gorm.DB {
 		LEFT OUTER JOIN anime ON anime.id = picture.anime_id
 		`)
 }
+
+func VideoEntries() *gorm.DB {
+	return DB.Table("entry").
+		Preload("Picture").Preload("Video").Preload("Summary").Preload("Blog").
+		Preload("Scores").
+		// Preload("Tags").Preload("Images"). XXX: not supported relation
+		Select("entry.*").
+		Joins(`
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		INNER JOIN video ON entry.id = video.entry_id
+		`)
+}

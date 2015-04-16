@@ -36,6 +36,7 @@ func (c *TagsController) Show() {
 	pers := c.DefaultPers
 	qs := models.Entries()
 	qs = c.SetQ(qs.Filter("tags__tag__name", name), "")
+	qs = qs.Filter("blog__mediatype", "image")
 
 	cnt, _ := models.CountObjects(qs)
 	pager := pagination.SetPaginator(c.Ctx, pers, cnt)

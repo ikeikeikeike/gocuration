@@ -19,6 +19,9 @@ func init() {
 
 	beego.Router("/search.html", &book.EntriesController{}, "get:Search")
 
+	beego.Router(`/blog/v:id([0-9]+)/`, &book.BlogsController{}, "get:Show")
+	beego.Router(`/blog/v:id([0-9]+)/:title(.*)?`, &book.BlogsController{}, "get:Show")
+
 	beego.Router("/tags.html", &book.TagsController{}, "get:Index")
 	beego.Router(`/tag/:name`, &book.TagsController{}, "get:Show")
 

@@ -7,6 +7,7 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -29,6 +30,17 @@ func (c *EntriesController) Home() {
 	c.Data["Summaries"] = summaries
 
 	var entries []*ormapper.Entry
+	ormapper.VideoEntries().
+		Scopes(blog.FilterMediatype("movie")).
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(c.DefaultPers).
+		Order("entry.id DESC").
+		Find(&entries)
+	for _, e := range entries {
+		e.NewsLoader()
+	}
 	c.Data["Entries"] = entries
 
 	var divas []*ormapper.Diva
