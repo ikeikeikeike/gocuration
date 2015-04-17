@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -44,6 +46,64 @@ func (m *Entry) IsLiving() bool {
 		return false
 	}
 	return true
+}
+
+func (m *Entry) GetByBlog() (*gorm.DB, error) {
+	if !m.IsLiving() {
+		return nil, nil
+	}
+
+	db := DB.
+		Preload("Picture").Preload("Video").Preload("Blog").
+		Select("entry.*").
+		Joins(`INNER JOIN blog ON blog.id = entry.blog_id`).
+		Scopes(blog.FilterMediatype(m.Blog.Mediatype))
+
+	return db, nil
+}
+
+func (m *Entry) PreviousByBlog() (*Entry, error) {
+	db, err := m.GetByBlog()
+	if err != nil {
+		return nil, err
+	}
+
+	var list []*Entry
+	db = db.
+		Where("entry.blog_id = ?", m.Blog.Id).
+		Where("entry.id < ?", m.Id).
+		Last(&list)
+
+	if db.RecordNotFound() {
+		return nil, db.Error
+	}
+
+	e := list[0]
+	e.NewsLoader()
+
+	return e, nil
+}
+
+func (m *Entry) NextByBlog() (*Entry, error) {
+	db, err := m.GetByBlog()
+	if err != nil {
+		return nil, err
+	}
+
+	var list []*Entry
+	db = db.
+		Where("entry.blog_id = ?", m.Blog.Id).
+		Where("entry.id > ?", m.Id).
+		First(&list)
+
+	if db.RecordNotFound() {
+		return nil, db.Error
+	}
+
+	e := list[0]
+	e.NewsLoader()
+
+	return e, nil
 }
 
 func (m *Entry) CommaTags() string {

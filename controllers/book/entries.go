@@ -179,6 +179,9 @@ func (c *EntriesController) Show() {
 		s.ShowLoader()
 	}
 
+	c.Data["PrevEntry"], _ = m.PreviousByBlog()
+	c.Data["NextEntry"], _ = m.NextByBlog()
+
 	c.Data["Entry"] = m
 	c.Data["Divas"] = divas
 	c.Data["Animes"] = animes
