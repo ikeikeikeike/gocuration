@@ -41,3 +41,7 @@ type Character struct {
 	PicturesCount int
 	Pictures      []*Picture
 }
+
+func (m Character) TableName() string {
+	return "character"
+}
