@@ -47,11 +47,11 @@ func (m *Picture) NewsLoader() {
 	if m.Anime != nil {
 		DB.Model(&m).
 			Preload("Icon").
-			Preload("Characters").
+			// Preload("Characters"). // XXX: full scan
 			Related(&m.Anime)
 	}
 
-	DB.Model(&m).Find(&m.Characters)
+	// DB.Model(&m).Find(&m.Characters)  // XXX: full scan
 }
 
 func (m *Picture) ShowLoader() {
