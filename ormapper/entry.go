@@ -2,6 +2,7 @@ package ormapper
 
 import (
 	"database/sql"
+	"errors"
 	"strings"
 	"time"
 
@@ -76,6 +77,8 @@ func (m *Entry) PreviousByBlog() (*Entry, error) {
 
 	if db.RecordNotFound() {
 		return nil, db.Error
+	} else if len(list) <= 0 {
+		return nil, errors.New("no rows")
 	}
 
 	e := list[0]
@@ -98,6 +101,8 @@ func (m *Entry) NextByBlog() (*Entry, error) {
 
 	if db.RecordNotFound() {
 		return nil, db.Error
+	} else if len(list) <= 0 {
+		return nil, errors.New("no rows")
 	}
 
 	e := list[0]
