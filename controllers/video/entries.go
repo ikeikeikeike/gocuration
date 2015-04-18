@@ -27,6 +27,17 @@ func (c *EntriesController) Home() {
 	c.TplNames = "video/entries/home.tpl"
 
 	var summaries []*ormapper.Summary
+	ormapper.VideoSummaries().
+		Scopes(blog.FilterMediatype("movie")).
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Limit(c.DefaultPers).
+		Order("summary.sort ASC").
+		Find(&summaries)
+	for _, s := range summaries {
+		s.NewsLoader()
+	}
 	c.Data["Summaries"] = summaries
 
 	var entries []*ormapper.Entry

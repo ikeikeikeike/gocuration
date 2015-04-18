@@ -50,6 +50,17 @@ func (m *Summary) ShowLoader() {
 	m.NewsLoader()
 }
 
+func VideoSummaries() *gorm.DB {
+	return DB.Table("summary").
+		Preload("Entry").Preload("Scores").
+		Select("summary.*").
+		Joins(`
+		INNER JOIN entry ON entry.id = summary.entry_id 
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		INNER JOIN video ON entry.id = video.entry_id
+		`)
+}
+
 func PictureSummaries() *gorm.DB {
 	return DB.Table("summary").
 		Preload("Entry").Preload("Scores").

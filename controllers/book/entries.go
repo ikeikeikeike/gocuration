@@ -73,8 +73,9 @@ func (c *EntriesController) News() {
 
 	db := ormapper.PictureEntries().
 		Scopes(blog.FilterMediatype("image")).
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
 
 	var count int64
 	db.Count(&count)
@@ -98,8 +99,9 @@ func (c *EntriesController) Hots() {
 
 	db := ormapper.PictureSummaries().
 		Scopes(blog.FilterMediatype("image")).
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
 
 	var count int64
 	db.Count(&count)
