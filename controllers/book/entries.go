@@ -32,7 +32,7 @@ func (c *EntriesController) Home() {
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
 		Limit(c.DefaultPers).
-		Order("summary.sort DESC").
+		Order("summary.sort ASC").
 		Find(&summaries)
 	for _, s := range summaries {
 		s.NewsLoader()
@@ -108,7 +108,7 @@ func (c *EntriesController) Hots() {
 	db = db.Limit(c.DefaultPers).Offset(pager.Offset())
 
 	var summaries []*ormapper.Summary
-	db.Order("summary.sort DESC").Find(&summaries)
+	db.Order("summary.sort ASC").Find(&summaries)
 
 	for _, s := range summaries {
 		s.NewsLoader()
@@ -172,7 +172,7 @@ func (c *EntriesController) Show() {
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
 		Group("summary.id").
-		Order("summary.sort DESC").
+		Order("summary.sort ASC").
 		Limit(3).
 		Find(&summaries)
 	for _, s := range summaries {

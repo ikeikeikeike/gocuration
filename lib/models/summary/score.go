@@ -45,9 +45,9 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 		sql := `-- XXX: Need summary left join
 		SELECT entry.* FROM entry 
 		INNER JOIN 
-			entry_image ON entry_image.entry_id = entry.id 
+		  entry_image ON entry_image.entry_id = entry.id 
 		INNER JOIN 
-			image ON image.id = entry_image.image_id 
+		  image ON image.id = entry_image.image_id 
 		INNER JOIN 
 		  blog ON blog.id = entry.blog_id 
 		LEFT OUTER JOIN 
