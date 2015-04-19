@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
-	"bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
@@ -30,7 +29,9 @@ func (c *EntriesController) Home() {
 	ormapper.VideoSummaries().
 		Scopes(blog.FilterMediatype("movie")).
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
-		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(diva.FilterBlood(c.GetString("blood"))).
+		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
+		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
 		Limit(c.DefaultPers).
 		Order("summary.sort ASC").
@@ -44,7 +45,9 @@ func (c *EntriesController) Home() {
 	ormapper.VideoEntries().
 		Scopes(blog.FilterMediatype("movie")).
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
-		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(diva.FilterBlood(c.GetString("blood"))).
+		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
+		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
 		Limit(c.DefaultPers).
 		Order("entry.id DESC").
@@ -74,10 +77,13 @@ func (c *EntriesController) Home() {
 func (c *EntriesController) News() {
 	c.TplNames = "video/entries/news.tpl"
 
-	db := ormapper.PictureEntries().
+	db := ormapper.VideoEntries().
 		Scopes(blog.FilterMediatype("movie")).
-		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
+		Scopes(diva.FilterBlood(c.GetString("blood"))).
+		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
+		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
 
 	var count int64
 	db.Count(&count)
@@ -99,10 +105,13 @@ func (c *EntriesController) News() {
 func (c *EntriesController) Hots() {
 	c.TplNames = "video/entries/hots.tpl"
 
-	db := ormapper.PictureSummaries().
+	db := ormapper.VideoSummaries().
 		Scopes(blog.FilterMediatype("movie")).
-		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
+		Scopes(diva.FilterBlood(c.GetString("blood"))).
+		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
+		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
 
 	var count int64
 	db.Count(&count)
@@ -111,7 +120,7 @@ func (c *EntriesController) Hots() {
 	db = db.Limit(c.DefaultPers).Offset(pager.Offset())
 
 	var summaries []*ormapper.Summary
-	db.Order("summary.sort DESC").Find(&summaries)
+	db.Order("summary.sort ASC").Find(&summaries)
 
 	for _, s := range summaries {
 		s.NewsLoader()
@@ -142,7 +151,7 @@ func (c *EntriesController) Show() {
 		return
 	}
 
-	m.PictureShowLoader()
+	m.VideoShowLoader()
 
 	var (
 		divas      []*ormapper.Diva
@@ -167,16 +176,23 @@ func (c *EntriesController) Show() {
 			in = append(in, t.Name)
 		}
 	}
-	ormapper.PictureShowSummaries().
+	if len(in) <= 0 {
+		in = append(in, "ギャル")
+	}
+	ormapper.VideoShowSummaries().
 		Scopes(blog.FilterMediatype("movie")).
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
+		Group("summary.id").
+		Order("summary.sort ASC").
 		Limit(3).
-		Order("summary.sort DESC").
 		Find(&summaries)
 	for _, s := range summaries {
 		s.ShowLoader()
 	}
+
+	c.Data["PrevEntry"], _ = m.PreviousByBlog()
+	c.Data["NextEntry"], _ = m.NextByBlog()
 
 	c.Data["Entry"] = m
 	c.Data["Divas"] = divas

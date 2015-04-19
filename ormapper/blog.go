@@ -51,3 +51,16 @@ func (m *Blog) PictureShowLoader() {
 		e.NewsLoader()
 	}
 }
+
+func (m *Blog) VideoShowLoader() {
+	VideoEntries().
+		Scopes(blog.FilterMediatype("movie")).
+		Where("blog.id = ?", m.Id).
+		Limit("20").
+		Order("entry.id DESC").
+		Find(&m.Entries)
+
+	for _, e := range m.Entries {
+		e.NewsLoader()
+	}
+}

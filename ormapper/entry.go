@@ -183,6 +183,15 @@ func (m *Entry) PictureShowLoader() {
 	m.NewsLoader()
 }
 
+func (m *Entry) VideoShowLoader() {
+	if m.Blog != nil {
+		DB.Model(&m).Preload("Icon").Related(&m.Blog)
+		m.Blog.VideoShowLoader()
+	}
+
+	m.NewsLoader()
+}
+
 func PictureEntries() *gorm.DB {
 	return DB.Table("entry").
 		Preload("Picture").Preload("Video").Preload("Summary").Preload("Blog").

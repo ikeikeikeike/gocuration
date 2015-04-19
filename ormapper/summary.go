@@ -86,3 +86,16 @@ func PictureShowSummaries() *gorm.DB {
 		LEFT OUTER JOIN tag ON tag.id = et.tag_id
 		`)
 }
+
+func VideoShowSummaries() *gorm.DB {
+	return DB.Table("summary").
+		Preload("Entry").Preload("Scores").
+		Select("summary.*").
+		Joins(`
+		INNER JOIN entry ON entry.id = summary.entry_id 
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		INNER JOIN video ON entry.id = video.entry_id
+		LEFT OUTER JOIN entry_tag et ON et.entry_id = entry.id
+		LEFT OUTER JOIN tag ON tag.id = et.tag_id
+		`)
+}
