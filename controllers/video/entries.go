@@ -146,7 +146,7 @@ func (c *EntriesController) Show() {
 		Preload("Picture").Preload("Video").Preload("Blog").
 		First(m)
 
-	if !m.IsLiving() {
+	if !m.IsLiving() || m.Blog.Mediatype != "movie" {
 		c.Ctx.Abort(404, "404")
 		return
 	}

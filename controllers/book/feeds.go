@@ -7,6 +7,7 @@ import (
 
 	"bitbucket.org/ikeikeikeike/antenna/models/image"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/gopkg/convert"
@@ -42,7 +43,9 @@ func (c *FeedsController) Rss() {
 	)
 
 	ormapper.PictureSummaries().
+		Scopes(blog.FilterMediatype("image")).
 		Limit(10).
+		Order("summary.sort ASC").
 		Find(&summaries)
 
 	for _, summary := range summaries {
