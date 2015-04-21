@@ -1,6 +1,7 @@
 #!/bin/bash
 
 GOOS=linux GOARCH=amd64 go build -p 4 book.go
+GOOS=linux GOARCH=amd64 go build -p 4 video.go
 GOOS=linux GOARCH=amd64 go build -p 4 antenna.go
 
 cd bin
