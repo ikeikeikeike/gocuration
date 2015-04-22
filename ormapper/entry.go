@@ -163,7 +163,9 @@ func (m *Entry) NewsLoader() {
 		DB.Model(&m).Preload("Icon").Related(&m.Blog)
 	}
 	if m.Video != nil {
-		DB.Model(&m).Preload("Site").Related(&m.Video)
+		DB.Model(&m).Preload("Site").
+			Related(&m.Video)
+		m.Video.NewsLoader()
 	}
 	if m.Picture != nil {
 		DB.Model(&m).Preload("Anime").Preload("Images").

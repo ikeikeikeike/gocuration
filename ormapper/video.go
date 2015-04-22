@@ -24,8 +24,13 @@ type Video struct {
 	Divas []*Diva `gorm:"many2many:video_diva;"`
 }
 
-func (m *Video) ShowLoader() {
+func (m *Video) NewsLoader() {
 	if len(m.Divas) <= 0 {
-		DB.Model(&m).Association("Divas").Find(&m.Divas)
+		DB.Model(&m).Preload("Icon").Association("Divas").
+			Find(&m.Divas)
 	}
+}
+
+func (m *Video) ShowLoader() {
+	m.NewsLoader()
 }
