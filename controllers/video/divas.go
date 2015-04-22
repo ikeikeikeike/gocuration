@@ -66,6 +66,7 @@ func (c *DivasController) Show() {
 	qs := models.Videos()
 	qs = qs.Filter("divas__diva__name", name)
 	qs = qs.Filter("entry__isnull", false)
+	qs = qs.Filter("entry__blog__mediatype", "movie")
 
 	cnt, _ := models.CountObjects(qs)
 	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
