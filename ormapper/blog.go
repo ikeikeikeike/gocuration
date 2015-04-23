@@ -16,11 +16,13 @@ type Blog struct {
 	Mediatype   string
 	Adsensetype string
 
-	VerifyParts    int
-	VerifyRss      int
-	VerifyLink     int
-	VerifyBookRss  int
-	VerifyBookLink int
+	VerifyParts     int
+	VerifyRss       int
+	VerifyLink      int
+	VerifyBookRss   int
+	VerifyBookLink  int
+	VerifyVideoRss  int
+	VerifyVideoLink int
 
 	IsPenalty bool
 
