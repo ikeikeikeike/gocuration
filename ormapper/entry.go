@@ -172,8 +172,10 @@ func (m *Entry) NewsLoader() {
 			Related(&m.Picture)
 		m.Picture.NewsLoader()
 	}
-	DB.Model(&m).Association("Tags").Find(&m.Tags)
-	DB.Model(&m).Association("Images").Find(&m.Images)
+	// DB.Model(&m).Association("Tags").Find(&m.Tags)
+	// DB.Model(&m).Association("Images").Find(&m.Images)
+	DB.Model(&m).Order("tag.id DESC").Related(&m.Tags, "Tags")
+	DB.Model(&m).Order("image.id DESC").Related(&m.Images, "Images")
 }
 
 func (m *Entry) PictureShowLoader() {

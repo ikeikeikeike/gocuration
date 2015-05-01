@@ -26,6 +26,7 @@ type Video struct {
 
 func (m *Video) NewsLoader() {
 	if len(m.Divas) <= 0 {
+		// XXX: 以下のクエリは order by diva.id asc なので注意が必要
 		DB.Model(&m).Preload("Icon").Association("Divas").
 			Find(&m.Divas)
 	}
