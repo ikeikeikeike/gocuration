@@ -51,6 +51,7 @@ func traceMessage(ctx *context.Context) []string {
 		fmt.Sprintf("Uri: %s", ctx.Input.Uri()),
 		fmt.Sprintf("Method: %s", ctx.Input.Method()),
 		fmt.Sprintf("Params: %v", ctx.Input.Params),
+		fmt.Sprintf("Referer: %s", ctx.Input.Referer()),
 		fmt.Sprintf("UserAgent: %s", ctx.Input.UserAgent()),
 		"",
 	}
