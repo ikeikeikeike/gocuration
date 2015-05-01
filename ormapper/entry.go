@@ -187,6 +187,10 @@ func (m *Entry) PictureShowLoader() {
 	}
 
 	m.NewsLoader()
+
+	if m.Picture == nil {
+		m.Picture = new(Picture)
+	}
 }
 
 func (m *Entry) VideoShowLoader() {
@@ -196,6 +200,10 @@ func (m *Entry) VideoShowLoader() {
 	}
 
 	m.NewsLoader()
+
+	if m.Video == nil {
+		m.Video = new(Video)
+	}
 }
 
 func PictureEntries() *gorm.DB {

@@ -144,20 +144,12 @@ func (c *EntriesController) Show() {
 	m.PictureShowLoader()
 
 	var (
-		divas      []*ormapper.Diva
-		animes     []*ormapper.Anime
-		summaries  []*ormapper.Summary
-		characters []*ormapper.Character
+		animes    []*ormapper.Anime
+		summaries []*ormapper.Summary
 	)
 
-	if m.Video != nil {
-		divas = m.Video.Divas
-	}
-	if m.Picture != nil {
-		characters = m.Picture.Characters
-		if m.Picture.Anime != nil {
-			animes = []*ormapper.Anime{m.Picture.Anime}
-		}
+	if m.Picture.Anime != nil {
+		animes = []*ormapper.Anime{m.Picture.Anime}
 	}
 
 	var in []string
@@ -185,10 +177,10 @@ func (c *EntriesController) Show() {
 	c.Data["NextEntry"], _ = m.NextByBlog()
 
 	c.Data["Entry"] = m
-	c.Data["Divas"] = divas
+	c.Data["Divas"] = m.Video.Divas
 	c.Data["Animes"] = animes
 	c.Data["Summaries"] = summaries
-	c.Data["Characters"] = characters
+	c.Data["Characters"] = m.Picture.Characters
 }
 
 func (c *EntriesController) Viewer() {
