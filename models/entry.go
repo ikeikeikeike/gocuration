@@ -29,6 +29,8 @@ type Entry struct {
 	Publisher   string    `orm:"size(255);null"    json:"publisher"` // RSSFeeder
 	PublishedAt time.Time `orm:"type(datetime);null;index" json:"publishedAt"`
 
+	IsPenalty bool `orm:"default(0)"`
+
 	Q string `orm:"type(text);null" json:"-"` // Gin Index
 
 	Created time.Time `orm:"auto_now_add;type(datetime)" json:"created"`
