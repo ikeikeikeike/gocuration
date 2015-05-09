@@ -10,6 +10,7 @@ type Meta struct {
 	AntennaURL      string
 	BookURL         string
 	VideoURL        string
+	DicURL          string
 	Copyright       string
 	Author          string
 	Email           string
@@ -39,6 +40,7 @@ func NewMeta() *Meta {
 		AppName:         beego.AppConfig.String("AppName"),
 		AntennaURL:      beego.AppConfig.String("antennaurl"),
 		BookURL:         beego.AppConfig.String("bookurl"),
+		DicURL:          beego.AppConfig.String("dicurl"),
 		VideoURL:        beego.AppConfig.String("videourl"),
 		Copyright:       beego.AppConfig.String("SiteName"),
 		Author:          beego.AppConfig.String("Author"),
