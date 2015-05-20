@@ -2,6 +2,8 @@ package entry
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/models"
@@ -46,6 +48,15 @@ func AddsByChannels(chs []*rss.Channel, b *models.Blog) (entries []*models.Entry
 	}
 	return
 }
+
+var reIgnoreSites = func() *regexp.Regexp {
+	nameList := []string{
+		`xvideos?`, `erovideo`, `redtube`,
+		`hamster`, `fc2`, `videomega`,
+		`download_button`, `erodougamo/10000`,
+	}
+	return regexp.MustCompile(fmt.Sprintf(`(?:%s)\.(?:jpe?g|png|gif)$`, strings.Join(nameList, `|`)))
+}()
 
 func AddByItem(s *models.Entry, it *rss.Item, b *models.Blog) (int64, error) {
 	var (
@@ -101,6 +112,11 @@ func AddByItem(s *models.Entry, it *rss.Item, b *models.Blog) (int64, error) {
 		var imgs []*models.Image
 		for _, src_ := range paths {
 			src := str.Clean(src_)
+
+			if reIgnoreSites.MatchString(src) {
+				beego.Notice("ignore image: ", src)
+				continue
+			}
 
 			info, err := image.NewFileInfo(src)
 			if err != nil {

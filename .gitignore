@@ -51,3 +51,5 @@ parts.orig.css
 /.hgignore
 /book.go
 /video.go
+/up.sh
+/up-prod.sh
