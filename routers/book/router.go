@@ -3,6 +3,7 @@ package book
 import (
 	_ "bitbucket.org/ikeikeikeike/antenna/routers"
 
+	"bitbucket.org/ikeikeikeike/antenna/controllers"
 	"bitbucket.org/ikeikeikeike/antenna/controllers/book"
 	"github.com/astaxie/beego"
 )
@@ -34,4 +35,7 @@ func init() {
 	beego.Router(`/feed/rdf.xml`, &book.FeedsController{}, "get:Rdf")
 	beego.Router(`/feed/rss.xml`, &book.FeedsController{}, "get:Rss")
 	beego.Router(`/feed/atom.xml`, &book.FeedsController{}, "get:Atom")
+
+	// ext
+	beego.Router(`/ok.gif`, &controllers.OkController{}, "get:Helthcheck")
 }

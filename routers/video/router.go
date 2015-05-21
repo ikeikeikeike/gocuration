@@ -3,6 +3,7 @@ package video
 import (
 	_ "bitbucket.org/ikeikeikeike/antenna/routers"
 
+	"bitbucket.org/ikeikeikeike/antenna/controllers"
 	"bitbucket.org/ikeikeikeike/antenna/controllers/video"
 	"github.com/astaxie/beego"
 )
@@ -30,4 +31,7 @@ func init() {
 	beego.Router(`/feed/rdf.xml`, &video.FeedsController{}, "get:Rdf")
 	beego.Router(`/feed/rss.xml`, &video.FeedsController{}, "get:Rss")
 	beego.Router(`/feed/atom.xml`, &video.FeedsController{}, "get:Atom")
+
+	// ext
+	beego.Router(`/ok.gif`, &controllers.OkController{}, "get:Helthcheck")
 }

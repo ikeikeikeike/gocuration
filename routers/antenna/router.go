@@ -1,6 +1,7 @@
 package antenna
 
 import (
+	"bitbucket.org/ikeikeikeike/antenna/controllers"
 	"bitbucket.org/ikeikeikeike/antenna/controllers/admin"
 	"bitbucket.org/ikeikeikeike/antenna/controllers/public"
 	_ "bitbucket.org/ikeikeikeike/antenna/routers"
@@ -72,4 +73,7 @@ func init() {
 	beego.Router(`/admin/terms.html`, &admin.LicensesController{}, "get:Terms")
 	beego.Router(`/admin/privacy.html`, &admin.LicensesController{}, "get:Privacy")
 	beego.Router(`/admin/guideline.html`, &admin.LicensesController{}, "get:Guideline")
+
+	// ext
+	beego.Router(`/ok.gif`, &controllers.OkController{}, "get:Helthcheck")
 }
