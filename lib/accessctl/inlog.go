@@ -42,7 +42,7 @@ func IsInAccessLog(in *InLog) bool {
 	}
 
 	if ru.Host == uu.Host {
-		beego.Debug("blank hostname")
+		beego.Debug("same domain")
 		return false
 	}
 
