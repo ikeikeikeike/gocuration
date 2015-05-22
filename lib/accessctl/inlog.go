@@ -119,7 +119,7 @@ func (sin *ScoringInLog) Scoring(url string) (score int, err error) {
 	scores := make(map[string]int)
 
 	for _, il := range inlogs {
-		t, _ := time.Parse(Timeformat, il.Time)
+		t, _ := time.Parse(time.RFC1123, il.Time)
 
 		scores[fmt.Sprintf("%s||%s||%s",
 			il.RemoteHost, il.UserAgent, t.Format("2006-01-02T15"))]++

@@ -1,8 +1,11 @@
 package accessctl
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
-var Timeformat = "2006-01-02T15:04:05Z07:00"
+var Timeformat = time.RFC1123
 
 type InLog struct {
 	RemoteHost string `json: "remoteHost"`
