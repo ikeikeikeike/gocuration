@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -10,6 +11,7 @@ import (
 	actl "bitbucket.org/ikeikeikeike/antenna/lib/accessctl"
 	"bitbucket.org/ikeikeikeike/antenna/models/entry"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/ikeikeikeike/gopkg/accessctl"
 	"github.com/ikeikeikeike/gopkg/convert"
@@ -54,7 +56,8 @@ func (c *PublicController) PushInAccessLog() (err error) {
 		return errors.New("could not push access log")
 	}
 
-	counter, err := accessctl.NewCounter()
+	config := fmt.Sprintf(`{"conn": "%s"}`, beego.AppConfig.String("RedisConn"))
+	counter, err := accessctl.NewCounter(config)
 	if err != nil {
 		return
 	}

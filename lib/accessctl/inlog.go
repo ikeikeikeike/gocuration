@@ -60,7 +60,8 @@ func NewScoringInLog() *ScoringInLog {
 
 func (sin *ScoringInLog) Bootstrap() (err error) {
 
-	counter, err := ctl.NewCounter()
+	config := fmt.Sprintf(`{"conn": "%s"}`, beego.AppConfig.String("RedisConn"))
+	counter, err := ctl.NewCounter(config)
 	if err != nil {
 		return
 	}
