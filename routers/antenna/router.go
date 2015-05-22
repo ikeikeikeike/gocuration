@@ -75,5 +75,5 @@ func init() {
 	beego.Router(`/admin/guideline.html`, &admin.LicensesController{}, "get:Guideline")
 
 	// ext
-	beego.Router(`/ok.gif`, &controllers.OkController{}, "get:Helthcheck")
+	beego.Router(`/ok.ico`, &controllers.OkController{}, "get:Helthcheck")
 }

@@ -33,5 +33,5 @@ func init() {
 	beego.Router(`/feed/atom.xml`, &video.FeedsController{}, "get:Atom")
 
 	// ext
-	beego.Router(`/ok.gif`, &controllers.OkController{}, "get:Helthcheck")
+	beego.Router(`/ok.ico`, &controllers.OkController{}, "get:Helthcheck")
 }
