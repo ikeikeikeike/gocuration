@@ -27,10 +27,10 @@ func IsInAccessLog(in *InLog) bool {
 	} else if in.Referer == "" {
 		beego.Debug("blank referer")
 		return false
-	} else if in.Referer == "www.google.co" {
+	} else if strings.Contains(in.Referer, "www.google.co") {
 		beego.Debug("ignore google referer")
 		return false
-	} else if in.Referer == "search.yahoo.co" {
+	} else if strings.Contains(in.Referer, "search.yahoo.co") {
 		beego.Debug("ignore yahoo referer")
 		return false
 	} else if strings.Contains(in.Referer, beego.AppConfig.String("domain")) {
