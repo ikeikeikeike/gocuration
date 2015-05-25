@@ -30,7 +30,7 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 	sqs := models.Summaries()
 
 	// entry and summary one to one relation.
-	for i <= 30 && m <= 10000 {
+	for i <= 30 && m <= 5000 {
 		m++
 		time.Sleep(100 * time.Millisecond)
 
