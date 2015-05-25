@@ -35,7 +35,7 @@ func SocialScore() (err error) {
   We execute the following is sequence.
 
 	  1. Provide score to blogs.
-	  2. Update blog's total score to the storage.
+	  2. Update blog's each score to the storage.
 	  3. Add entry(id) to the summary model: could register up to 1000 entry.
 
   Note:
@@ -61,8 +61,8 @@ func InScore() (err error) {
 	msg := "[tasks.summarize.score.InScore] "
 
 	// TODO: Return update number and write log it.
-	// Update total score
-	score.UpdateBlogTotalScoreBy(choices)
+	// Update each score
+	score.UpdateBlogEachScoreBy(choices)
 
 	// TODO: Return Update number and write log it.
 	//

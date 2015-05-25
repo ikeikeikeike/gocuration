@@ -5,6 +5,7 @@ import (
 
 	"bitbucket.org/ikeikeikeike/antenna/lib/accessctl"
 	"bitbucket.org/ikeikeikeike/antenna/models"
+	"github.com/jinzhu/now"
 	"github.com/jmcvetta/randutil"
 )
 
@@ -42,17 +43,48 @@ func ToScoredFrom(blogs []*models.Blog) (choices []randutil.Choice, err error) {
 }
 
 /*
-	Update total score.
+	Update each score.
 */
-func UpdateBlogTotalScoreBy(choices []randutil.Choice) {
+func UpdateBlogEachScoreBy(choices []randutil.Choice) {
 	for _, wc := range choices {
-		s := &models.Score{Name: "in", Blog: wc.Item.(*models.Blog)}
-		_, _, _ = s.ReadOrCreate("Name", "Blog")
-
 		// Update total score.
+		total := &models.Score{Name: "in", Blog: wc.Item.(*models.Blog)}
+		_, _, _ = total.ReadOrCreate("Name", "Blog")
+
+		month := &models.Score{Name: "month_in", Blog: wc.Item.(*models.Blog)}
+		_, _, _ = month.ReadOrCreate("Name", "Blog")
+
+		week := &models.Score{Name: "week_in", Blog: wc.Item.(*models.Blog)}
+		_, _, _ = week.ReadOrCreate("Name", "Blog")
+
+		day := &models.Score{Name: "day_in", Blog: wc.Item.(*models.Blog)}
+		_, _, _ = day.ReadOrCreate("Name", "Blog")
+
+		if !(now.BeginningOfMonth().Unix() < month.Updated.Unix() && month.Updated.Unix() < now.EndOfMonth().Unix()) {
+			month.Count = 0
+			month.Update()
+		}
+		if !(now.BeginningOfWeek().Unix() < week.Updated.Unix() && week.Updated.Unix() < now.EndOfWeek().Unix()) {
+			week.Count = 0
+			week.Update()
+		}
+		if !(now.BeginningOfDay().Unix() < day.Updated.Unix() && day.Updated.Unix() < now.EndOfDay().Unix()) {
+			day.Count = 0
+			day.Update()
+		}
+
 		if wc.Weight > 0 {
-			s.Count += int64(wc.Weight)
-			s.Update()
+			total.Count += int64(wc.Weight)
+			total.Update()
+
+			month.Count += int64(wc.Weight)
+			month.Update()
+
+			week.Count += int64(wc.Weight)
+			week.Update()
+
+			day.Count += int64(wc.Weight)
+			day.Update()
 		}
 	}
 }
