@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/score"
 	"github.com/jmcvetta/randutil"
-	"github.com/k0kubun/pp"
 )
 
 /*
@@ -18,7 +17,6 @@ func WeightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
 
 	for _, b := range in {
 		s := score.RandomGetByBlog(b)
-		pp.Println(s.Name)
 
 		// If site had many blog, Remove code below.
 		cnt := int(s.Count)
