@@ -51,6 +51,9 @@ func UpdateBlogEachScoreBy(choices []randutil.Choice) {
 		total := &models.Score{Name: "in", Blog: wc.Item.(*models.Blog)}
 		_, _, _ = total.ReadOrCreate("Name", "Blog")
 
+		year := &models.Score{Name: "year_in", Blog: wc.Item.(*models.Blog)}
+		_, _, _ = year.ReadOrCreate("Name", "Blog")
+
 		month := &models.Score{Name: "month_in", Blog: wc.Item.(*models.Blog)}
 		_, _, _ = month.ReadOrCreate("Name", "Blog")
 
@@ -60,6 +63,10 @@ func UpdateBlogEachScoreBy(choices []randutil.Choice) {
 		day := &models.Score{Name: "day_in", Blog: wc.Item.(*models.Blog)}
 		_, _, _ = day.ReadOrCreate("Name", "Blog")
 
+		if !(now.BeginningOfYear().Unix() < year.Updated.Unix() && year.Updated.Unix() < now.EndOfYear().Unix()) {
+			year.Count = 0
+			year.Update()
+		}
 		if !(now.BeginningOfMonth().Unix() < month.Updated.Unix() && month.Updated.Unix() < now.EndOfMonth().Unix()) {
 			month.Count = 0
 			month.Update()
@@ -76,6 +83,9 @@ func UpdateBlogEachScoreBy(choices []randutil.Choice) {
 		if wc.Weight > 0 {
 			total.Count += int64(wc.Weight)
 			total.Update()
+
+			year.Count += int64(wc.Weight)
+			year.Update()
 
 			month.Count += int64(wc.Weight)
 			month.Update()
