@@ -21,21 +21,21 @@ var (
 	defaultUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/7.1.3 Safari/537.85.12"
 
 	embedUrls = []string{
-		"flashservice.xvideos.com/embedframe",
-		"video.fc2.com/content",
-		"video.fc2.com/a/content",
-		"video.fc2.com/ja/a/content",
-		"www.tokyo-tube.com/embedcode",
+		`flashservice.xvideos.com/embedframe`,
+		`video.fc2.com/content`,
+		`video.fc2.com/a/content`,
+		`video.fc2.com/ja/a/content`,
+		`www.tokyo-tube.com/embedcode`,
 		// ero-video
-		"xhamster.com/xembed.php",
+		`xhamster.com/xembed.php`,
 		// asg
-		"www.pornhost.com/embed",
-		"www.tube8.com/embed/asian",
+		`www.pornhost.com/embed`,
+		`www.tube8.com/embed/asian`,
 		// redtube
-		"jp.pornhub.com/embed",
-		"www.pornhub.com/embed",
-		"japan-whores.com/embed",
-		"www.tokyo-porn-tube.com/embedcode",
+		`jp.pornhub.com/embed`,
+		`www.pornhub.com/embed`,
+		`japan-whores.com/embed`,
+		`www.tokyo-porn-tube.com/embedcode`,
 	}
 
 	// TODO: will be support future below.
@@ -51,24 +51,24 @@ var (
 	// <object data="http://embed.redtube.com/player/?id=837335&amp;style=redtube" class="resized" data-title="ギャルのkldalk"><param name="allowfullscreen" value="true"> <param name="AllowScriptAccess" value="always"> <param name="movie" value="http://embed.redtube.com/player/?id=837335&amp;style=redtube"> <param name="FlashVars" value="id=837335&amp;style=redtube&amp;autostart=false"> <embed src="http://embed.redtube.com/player/?id=837335&amp;style=redtube" allowfullscreen="true" allowscriptaccess="always" flashvars="autostart=false" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" class="resized"></embed></object>
 
 	videoHrefs = []string{
-		"www.xvideos.com/video",
-		"jp.xvideos.com/video",
-		"video.fc2.com/content",
-		"video.fc2.com/a/content",
-		"video.fc2.com/ja/a/content",
-		"www.tokyo-tube.com/video",
-		"ero-video.net/movie",
-		"jp.xhamster.com/movies",
-		"www.xhamster.com/movies",
-		"asg.to/contentsPage.html",
-		"www.pornhost.com",
-		"jp.pornhost.com",
-		"www.tube8.com",
-		"www.redtube.com",
-		"www.pornhub.com/view_video.php?viewkey",
-		"jp.pornhub.com/view_video.php?viewkey",
-		"japan-whores.com/videos",
-		"www.tokyo-porn-tube.com/video",
+		`www.xvideos.com/video`,
+		`jp.xvideos.com/video`,
+		`video.fc2.com/content`,
+		`video.fc2.com/a/content`,
+		`video.fc2.com/ja/a/content`,
+		`www.tokyo-tube.com/video`,
+		`ero-video.net/movie`,
+		`jp.xhamster.com/movies`,
+		`www.xhamster.com/movies`,
+		`asg.to/contentsPage.html`,
+		`www.pornhost.com`,
+		`jp.pornhost.com`,
+		`www.tube8.com`,
+		`www.redtube.com`,
+		`www.pornhub.com/view_video.php`,
+		`jp.pornhub.com/view_video.php`,
+		`japan-whores.com/videos`,
+		`www.tokyo-porn-tube.com/video`,
 	}
 )
 
@@ -112,7 +112,7 @@ func (e *Extractor) Do(entry *models.Entry) error {
 	Extracting ExternalURLs
 */
 func (e *Extractor) Urls() (urls []string) {
-	var re = regexp.MustCompile(strings.Join(videoHrefs, "|"))
+	var re = regexp.MustCompile(strings.Join(videoHrefs, `|`))
 
 	e.doc.Find("a").Each(func(i int, s *gq.Selection) {
 		h, ok := s.Attr("href")
@@ -136,7 +136,7 @@ func (e *Extractor) Urls() (urls []string) {
 // srcとurlでcontains ableなもの
 func (e *Extractor) Codes() (codes []string) {
 	var (
-		re  = regexp.MustCompile(strings.Join(embedUrls, "|"))
+		re  = regexp.MustCompile(strings.Join(embedUrls, `|`))
 		ok  bool
 		val string
 	)
