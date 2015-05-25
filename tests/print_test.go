@@ -22,7 +22,7 @@ func TestLivingBlogs(t *testing.T) {
 	var blogs []*models.Blog
 	blog.LivingBlogs().All(&blogs)
 
-	blogs = libb.WhightChoiceBlogs(blogs, 100)
+	blogs = libb.WeightChoiceBlogs(blogs, 100)
 
 	for _, b := range blogs {
 		pp.Println(b.Id, b.Rss, b.Url, b.Name, b.VerifyScore())
@@ -46,7 +46,7 @@ func TestParsingBlogs(t *testing.T) {
 	cond := c.And("rss__isnull", false).OrNot("rss", "")
 	o.QueryTable("blog").SetCond(cond).RelatedSel().All(&blogs)
 
-	for _, b := range libb.WhightChoiceBlogs(blogs, 100) {
+	for _, b := range libb.WeightChoiceBlogs(blogs, 100) {
 		pp.Println(b.Id, b.Rss, b.Url, b.Name, b.VerifyScore())
 	}
 

@@ -8,7 +8,7 @@ import (
 /*
 	Return weighted items by blog's score.
 */
-func WhightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
+func WeightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
 	var (
 		choices []randutil.Choice
 		blogs   []*models.Blog

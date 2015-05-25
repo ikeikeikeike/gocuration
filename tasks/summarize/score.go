@@ -25,7 +25,7 @@ func SocialScore() (err error) {
 	qs.All(&entries)
 
 	for _, s := range entries {
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(1500 * time.Millisecond)
 		entry.UpdateSocials(s)
 	}
 	return

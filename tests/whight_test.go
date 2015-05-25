@@ -21,7 +21,7 @@ func TestBlogsChoices(t *testing.T) {
 		println(b.Id)
 	}
 
-	for _, b := range whightChoiceBlogs(blogs, 1000) {
+	for _, b := range weightChoiceBlogs(blogs, 1000) {
 		println(b.Id)
 	}
 }
@@ -30,7 +30,7 @@ func TestBlogsChoices(t *testing.T) {
 	whighted blog items by blog in score.
 
 */
-func whightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
+func weightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
 	var (
 		choices []randutil.Choice
 		blogs   []*models.Blog
