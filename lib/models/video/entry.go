@@ -1,6 +1,8 @@
 package video
 
 import (
+	"strings"
+
 	libentry "bitbucket.org/ikeikeikeike/antenna/lib/models/entry"
 	"bitbucket.org/ikeikeikeike/antenna/lib/models/site"
 	"bitbucket.org/ikeikeikeike/antenna/models"
@@ -42,9 +44,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 			v.Url = val
 		}
 		codes := ext.Codes()
-		for _, val := range codes {
-			v.Code = val
-		}
+		v.Code = strings.Join(codes, "")
 
 		if v.Site, err = site.ReadOrCreateByVideo(v); err != nil {
 			beego.Notice("Add site Entry{id=", e.Id, "}", err)

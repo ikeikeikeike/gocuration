@@ -26,9 +26,9 @@ var (
 		`video.fc2.com/a/content`,
 		`video.fc2.com/ja/a/content`,
 		`www.tokyo-tube.com/embedcode`,
-		// ero-video
+		// ero-video supported
 		`xhamster.com/xembed.php`,
-		// asg
+		// asg supported
 		`www.pornhost.com/embed`,
 		`www.tube8.com/embed/asian`,
 		// redtube
@@ -40,13 +40,9 @@ var (
 
 	// TODO: will be support future below.
 
-	// <script type="text/javascript" src="http://asg.to/js/past_uraui.js" data-title="パ外道親父！"></script><script type="text/javascript" data-title="パち負けた腹いせに息子の嫁を息子の前でる親父！">Purauifla("mcd=X0Bb9lGg4oHcJLjI", 450, 372);</script>
-
 	// <script src="http://static.fc2.com/video/js/outerplayer.min.js" url="http://video.fc2.com/ja/a/content/20150204XER1DTFc/" tk="" tl="【サンプル】 させてみた!!" sj="52000" d="16" w="448" h="380"  suggest="on" charset="UTF-8"></script>
 
 	// <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" wmode="transparent" width="448" height="284" id="flv2" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="http://video.fc2.com/flv2.swf?i=20150206aZzPs9Mg&d=3063&movie_stop=off&no_progressive=1&otag=1&sj=28000&rel=1" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><param name="allowFullScreen" value="true" /><embed src="http://video.fc2.com/flv2.swf?i=20150206aZzPs9Mg&d=3063&movie_stop=off&no_progressive=1&otag=1&sj=28000&rel=1" quality="high" bgcolor="#ffffff" wmode="transparent" width="448" height="284" name="flv2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" allowFullScreen="true" /></object><br /><a href="http://video.fc2.com/content/20150206aZzPs9Mg/" title="対応" rel="nofollow" 【、可愛いが好き</a>
-
-	// <script type="text/javascript" src="http://ero-video.net/js/embed_evplayer.js" data-title="家出少女捕獲』。。。"></script><script type="text/javascript" data-title="出　捕獲』。。。">embedevplayer("mcd=HIzIngBIiNICwg92", 450, 252);</script>
 
 	// <object data="http://embed.redtube.com/player/?id=837335&amp;style=redtube" class="resized" data-title="ギャルのkldalk"><param name="allowfullscreen" value="true"> <param name="AllowScriptAccess" value="always"> <param name="movie" value="http://embed.redtube.com/player/?id=837335&amp;style=redtube"> <param name="FlashVars" value="id=837335&amp;style=redtube&amp;autostart=false"> <embed src="http://embed.redtube.com/player/?id=837335&amp;style=redtube" allowfullscreen="true" allowscriptaccess="always" flashvars="autostart=false" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" class="resized"></embed></object>
 
@@ -135,32 +131,41 @@ func (e *Extractor) Urls() (urls []string) {
 // iframe or script or object
 // srcとurlでcontains ableなもの
 func (e *Extractor) Codes() (codes []string) {
-	var (
-		re  = regexp.MustCompile(strings.Join(embedUrls, `|`))
-		ok  bool
-		val string
-	)
+
+	var render = func(sel *gq.Selection) {
+		var buf bytes.Buffer
+		sel.Each(func(i int, s *gq.Selection) {
+			html.Render(&buf, s.Nodes[0])
+			codes = append(codes, str.Clean(buf.String()))
+		})
+	}
 
 	// sel := e.doc.Find("iframe,script,embed,object").FilterFunction(func(i int, s *gq.Selection) bool {
+	var re = regexp.MustCompile(strings.Join(embedUrls, `|`))
 	sel := e.doc.Find("iframe,script").FilterFunction(func(i int, s *gq.Selection) bool {
-		val, ok = s.Attr("src")
-		if ok && re.MatchString(val) {
+		src, ok := s.Attr("src")
+		if ok && re.MatchString(src) {
 			return true
 		}
-		val, ok = s.Attr("url")
-		if ok && re.MatchString(val) {
+		url, ok := s.Attr("url")
+		if ok && re.MatchString(url) {
 			return true
+		}
+		if strings.Contains(src, "ero-video.net/js/embed_evplayer") {
+			render(s)
+			render(s.Next())
+			return false
+		}
+		if strings.Contains(src, "asg.to/js/past_uraui") {
+			render(s)
+			render(s.Next())
+			return false
 		}
 
 		return false
 	})
 
-	var buf bytes.Buffer
-	sel.Each(func(i int, s *gq.Selection) {
-		html.Render(&buf, s.Nodes[0])
-		codes = append(codes, str.Clean(buf.String()))
-	})
-
+	render(sel)
 	return
 }
 
