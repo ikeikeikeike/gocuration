@@ -33,6 +33,7 @@ func (c *EntriesController) Home() {
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Where(`video.url != ? OR video.code != ?`, "", "").
 		Limit(c.DefaultPers).
 		Order("summary.sort ASC").
 		Find(&summaries)
@@ -111,7 +112,8 @@ func (c *EntriesController) Hots() {
 		Scopes(diva.FilterBlood(c.GetString("blood"))).
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
-		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Where(`video.url != ? OR video.code != ?`, "", "")
 
 	var count int64
 	db.Count(&count)
