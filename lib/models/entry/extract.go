@@ -26,12 +26,10 @@ var (
 		`video.fc2.com/a/content`,
 		`video.fc2.com/ja/a/content`,
 		`www.tokyo-tube.com/embedcode`,
-		// ero-video supported
 		`xhamster.com/xembed.php`,
-		// asg supported
 		`www.pornhost.com/embed`,
 		`www.tube8.com/embed/asian`,
-		// redtube
+		`www.pipii.tv/player`,
 		`jp.pornhub.com/embed`,
 		`www.pornhub.com/embed`,
 		`japan-whores.com/embed`,
@@ -43,8 +41,6 @@ var (
 	// <script src="http://static.fc2.com/video/js/outerplayer.min.js" url="http://video.fc2.com/ja/a/content/20150204XER1DTFc/" tk="" tl="【サンプル】 させてみた!!" sj="52000" d="16" w="448" h="380"  suggest="on" charset="UTF-8"></script>
 
 	// <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" wmode="transparent" width="448" height="284" id="flv2" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="http://video.fc2.com/flv2.swf?i=20150206aZzPs9Mg&d=3063&movie_stop=off&no_progressive=1&otag=1&sj=28000&rel=1" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><param name="allowFullScreen" value="true" /><embed src="http://video.fc2.com/flv2.swf?i=20150206aZzPs9Mg&d=3063&movie_stop=off&no_progressive=1&otag=1&sj=28000&rel=1" quality="high" bgcolor="#ffffff" wmode="transparent" width="448" height="284" name="flv2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" allowFullScreen="true" /></object><br /><a href="http://video.fc2.com/content/20150206aZzPs9Mg/" title="対応" rel="nofollow" 【、可愛いが好き</a>
-
-	// <object data="http://embed.redtube.com/player/?id=837335&amp;style=redtube" class="resized" data-title="ギャルのkldalk"><param name="allowfullscreen" value="true"> <param name="AllowScriptAccess" value="always"> <param name="movie" value="http://embed.redtube.com/player/?id=837335&amp;style=redtube"> <param name="FlashVars" value="id=837335&amp;style=redtube&amp;autostart=false"> <embed src="http://embed.redtube.com/player/?id=837335&amp;style=redtube" allowfullscreen="true" allowscriptaccess="always" flashvars="autostart=false" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" class="resized"></embed></object>
 
 	videoHrefs = []string{
 		`www.xvideos.com/video`,
@@ -65,6 +61,8 @@ var (
 		`jp.pornhub.com/view_video.php`,
 		`japan-whores.com/videos`,
 		`www.tokyo-porn-tube.com/video`,
+		`www.flashx.tv`,
+		// `www.thisav.com/video`,  // unko
 	}
 )
 

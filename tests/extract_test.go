@@ -41,6 +41,9 @@ func TestExtract(t *testing.T) {
 		"http://erolog.info/watch/ero140281",
 		"http://erolog.info/watch/ero140438",
 		"http://erolog.info/watch/ero140521",
+		"http://niconama-erodouga.com/blog-entry-12416.html",
+		"http://funkymovie.blog.fc2.com/blog-entry-3856.html",
+		"http://tousatudedouga.blog.fc2.com/blog-entry-690.html",
 	}
 
 	for _, url := range urlsForTest {
