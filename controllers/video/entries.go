@@ -185,6 +185,7 @@ func (c *EntriesController) Show() {
 		Scopes(blog.FilterMediatype("movie")).
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
+		Where(`video.url != ? OR video.code != ?`, "", "").
 		Group("summary.id").
 		Order("summary.sort ASC").
 		Limit(15).
