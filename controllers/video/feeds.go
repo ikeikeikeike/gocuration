@@ -44,6 +44,7 @@ func (c *FeedsController) Rss() {
 
 	ormapper.VideoSummaries().
 		Scopes(blog.FilterMediatype("movie")).
+		Where(`video.url != ? OR video.code != ?`, "", "").
 		Limit(10).
 		Order("summary.sort ASC").
 		Find(&summaries)
