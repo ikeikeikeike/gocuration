@@ -142,30 +142,34 @@ func (e *Extractor) Codes() (codes []string) {
 
 	// sel := e.doc.Find("iframe,script,embed,object").FilterFunction(func(i int, s *gq.Selection) bool {
 	var re = regexp.MustCompile(strings.Join(embedUrls, `|`))
-	sel := e.doc.Find("iframe,script").FilterFunction(func(i int, s *gq.Selection) bool {
+	e.doc.Find("iframe,script").Each(func(i int, s *gq.Selection) {
 		src, ok := s.Attr("src")
 		if ok && re.MatchString(src) {
-			return true
+			render(s)
 		}
 		url, ok := s.Attr("url")
 		if ok && re.MatchString(url) {
-			return true
+			render(s)
 		}
 		if strings.Contains(src, "ero-video.net/js/embed_evplayer") {
 			render(s)
 			render(s.Next())
-			return false
 		}
 		if strings.Contains(src, "asg.to/js/past_uraui") {
 			render(s)
 			render(s.Next())
-			return false
 		}
-
-		return false
 	})
 
-	render(sel)
+	if len(codes) <= 0 {
+		e.doc.Find("object").Each(func(i int, s *gq.Selection) {
+			data, ok := s.Attr("data")
+			if ok && strings.Contains(data, "embed.redtube.com/player") {
+				render(s)
+			}
+		})
+	}
+
 	return
 }
 
