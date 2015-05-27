@@ -23,6 +23,7 @@ type Entry struct {
 	Publisher   string
 	PublishedAt time.Time
 
+	IsBan     string
 	IsPenalty bool
 
 	Q string

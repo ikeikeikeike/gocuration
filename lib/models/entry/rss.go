@@ -30,6 +30,11 @@ func AddsByChannels(chs []*rss.Channel, b *models.Blog) (entries []*models.Entry
 	if b.IsPenalty {
 		num = 1
 	}
+	if b.IsBan == "soft" {
+		num = 1
+	} else if b.IsBan == "hard" {
+		num = 0
+	}
 
 	for _, ch := range chs {
 		for idx, it := range ch.Items {

@@ -29,6 +29,11 @@ func WeightChoiceBlogs(in []*models.Blog, max int) []*models.Blog {
 		if b.IsPenalty {
 			weight = 1
 		}
+		if b.IsBan == "soft" {
+			weight = 1
+		} else if b.IsBan == "hard" {
+			weight = 0
+		}
 
 		choices = append(choices, randutil.Choice{
 			Weight: weight,
