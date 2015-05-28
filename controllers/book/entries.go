@@ -173,7 +173,7 @@ func (c *EntriesController) Show() {
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
 		Group("summary.id").
 		Order("summary.sort ASC").
-		Limit(3).
+		Limit(15).
 		Find(&summaries)
 	for _, s := range summaries {
 		s.ShowLoader()
