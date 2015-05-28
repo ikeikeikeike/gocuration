@@ -11,6 +11,7 @@ func init() {
 	toolbox.AddTask("summarizeRssFeed", summarizeRssFeed())
 	toolbox.AddTask("summarizeSocialScore", summarizeSocialScore())
 	toolbox.AddTask("summarizeInScore", summarizeInScore())
+	toolbox.AddTask("summarizeShowcounter", summarizeShowcounter())
 	toolbox.AddTask("summarizeDivaVideosCount", summarizeDivaVideosCount())
 	toolbox.AddTask("summarizeCharacterPicturescount", summarizeCharacterPicturescount())
 	toolbox.AddTask("summarizeAnimePicturescount", summarizeAnimePicturescount())
@@ -39,6 +40,14 @@ func summarizeRssFeed() *toolbox.Task {
 func summarizeInScore() *toolbox.Task {
 	return toolbox.NewTask("summarizeInScore", "0 30 * * * *", func() (err error) {
 		err = summarize.InScore()
+		return
+	})
+}
+
+// Execute: xxxx-xx-xx xx:15:00
+func summarizeShowcounter() *toolbox.Task {
+	return toolbox.NewTask("summarizeShowcounter", "0 15 * * * *", func() (err error) {
+		err = summarize.Showcounter()
 		return
 	})
 }

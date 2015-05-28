@@ -15,6 +15,7 @@ type Video struct {
 	Url      string `orm:"size(255);null" form:"Url" valid:"Required;Match(/^https?/)"`
 	Code     string `orm:"type(text);null"` // TODO: Change default value later.
 	Duration int    `orm:"default(0);index"`
+	PageView int64  `orm:"default(0);index"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
