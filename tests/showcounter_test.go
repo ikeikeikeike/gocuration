@@ -17,4 +17,6 @@ func TestExtract(t *testing.T) {
 	c.Bootstrap()
 
 	pp.Println(c.Counting("elog"))
+	pp.Println(c.Counting("book"))
+	pp.Println(c.Counting("video"))
 }

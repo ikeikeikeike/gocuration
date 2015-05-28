@@ -53,6 +53,17 @@ func main() {
 			},
 		},
 		{
+			Name: "showcounter",
+			// ShortName: "i",
+			Usage: "summarize Show page views",
+			Action: func(c *cli.Context) {
+				err := summarize.Showcounter()
+				if err != nil {
+					println(err.Error())
+				}
+			},
+		},
+		{
 			Name: "videoscount",
 			// ShortName: "i",
 			Usage: "Summarize video starring number for Diva model",
