@@ -24,6 +24,7 @@ type Blog struct {
 	VerifyVideoRss  int
 	VerifyVideoLink int
 
+	IsBan     string
 	IsPenalty bool
 
 	LastModified time.Time

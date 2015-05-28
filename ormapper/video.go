@@ -11,6 +11,7 @@ type Video struct {
 	Url      string
 	Code     string
 	Duration int
+	PageView int64
 
 	Created time.Time
 	Updated time.Time

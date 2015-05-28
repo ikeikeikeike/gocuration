@@ -6,7 +6,8 @@ import (
 )
 
 type Picture struct {
-	Id int64
+	Id       int64
+	PageView int64
 
 	Created time.Time
 	Updated time.Time
