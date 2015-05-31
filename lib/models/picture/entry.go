@@ -8,12 +8,12 @@ import (
 
 	libm "bitbucket.org/ikeikeikeike/antenna/lib/models"
 	libentry "bitbucket.org/ikeikeikeike/antenna/lib/models/entry"
+	"bitbucket.org/ikeikeikeike/antenna/lib/verify"
 	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/anime"
 	"bitbucket.org/ikeikeikeike/antenna/models/character"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/ikeikeikeike/gopkg/extract/image"
 	"github.com/ikeikeikeike/gopkg/rdm"
 	"github.com/ikeikeikeike/gopkg/str"
 )
@@ -83,9 +83,7 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 	)
 
 	o := orm.NewOrm()
-
-	info := image.NewInfo()
-	info.Header("User-Agent", beego.AppConfig.String("UserAgent"))
+	info := verify.AvailableImageChecker()
 
 	for _, e := range entries {
 		e.RelLoader()
@@ -122,7 +120,10 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 
 				f, err := info.Fetch(src)
 				if err != nil {
-					beego.Notice("image.NewFileInfo:", err)
+					beego.Notice("not fetch image.NewFileInfo:", err)
+					continue
+				} else if f == nil {
+					beego.Notice("not fetch image.NewFileInfo:", f)
 					continue
 				} else if f.Width < 400 || f.Height < 330 {
 					beego.Notice("fileinfo: less than 400/330(width/height)")
