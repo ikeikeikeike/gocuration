@@ -1,0 +1,12 @@
+#!/bin/bash
+
+go build -p 4 book.go
+go build -p 4 video.go
+go build -p 4 antenna.go
+
+cd bin
+
+for f in *.go;
+do
+    go build -p 4 $f
+done
