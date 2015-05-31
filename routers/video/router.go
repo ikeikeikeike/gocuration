@@ -28,6 +28,12 @@ func init() {
 	beego.Router("/divas.html", &video.DivasController{}, "get:Index")
 	beego.Router(`/diva/:name`, &video.DivasController{}, "get,post:Show")
 
+	beego.Router("/animes.html", &video.AnimesController{}, "get:Index")
+	beego.Router(`/anime/:name`, &video.AnimesController{}, "get,post:Show")
+
+	beego.Router("/characters.html", &video.CharactersController{}, "get:Index")
+	beego.Router(`/character/:name`, &video.CharactersController{}, "get,post:Show")
+
 	beego.Router(`/feed/rdf.xml`, &video.FeedsController{}, "get:Rdf")
 	beego.Router(`/feed/rss.xml`, &video.FeedsController{}, "get:Rss")
 	beego.Router(`/feed/atom.xml`, &video.FeedsController{}, "get:Atom")
