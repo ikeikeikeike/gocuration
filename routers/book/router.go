@@ -26,6 +26,9 @@ func init() {
 	beego.Router("/tags.html", &book.TagsController{}, "get:Index")
 	beego.Router(`/tag/:name`, &book.TagsController{}, "get:Show")
 
+	beego.Router("/divas.html", &book.DivasController{}, "get:Index")
+	beego.Router(`/diva/:name`, &book.DivasController{}, "get,post:Show")
+
 	beego.Router("/animes.html", &book.AnimesController{}, "get:Index")
 	beego.Router(`/anime/:name`, &book.AnimesController{}, "get,post:Show")
 
