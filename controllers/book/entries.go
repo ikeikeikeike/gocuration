@@ -7,6 +7,7 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/anime"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/picture"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -31,6 +32,7 @@ func (c *EntriesController) Home() {
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(picture.ImageCountMoreThanOnce).
 		Limit(c.DefaultPers).
 		Order("summary.sort ASC").
 		Find(&summaries)
@@ -45,6 +47,7 @@ func (c *EntriesController) Home() {
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(picture.ImageCountMoreThanOnce).
 		Limit(c.DefaultPers).
 		Order("entry.id DESC").
 		Find(&entries)
@@ -75,7 +78,8 @@ func (c *EntriesController) News() {
 		Scopes(blog.FilterMediatype("image")).
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(picture.ImageCountMoreThanOnce)
 
 	var count int64
 	db.Count(&count)
@@ -101,7 +105,8 @@ func (c *EntriesController) Hots() {
 		Scopes(blog.FilterMediatype("image")).
 		Scopes(blog.FilterAdsensetype(c.GetString("at"))).
 		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
-		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(picture.ImageCountMoreThanOnce)
 
 	var count int64
 	db.Count(&count)
@@ -169,6 +174,7 @@ func (c *EntriesController) Show() {
 	}
 	ormapper.PictureShowSummaries().
 		Scopes(blog.FilterMediatype("image")).
+		Scopes(picture.ImageCountMoreThanOnce).
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
 		Group("summary.id").

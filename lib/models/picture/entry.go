@@ -139,6 +139,8 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 			}
 		}
 		p.RelLoader()
+		p.ImageCount = len(p.Images)
+		p.Update("ImageCount", "Updated")
 
 		// If does not main image, we will add to main image from picture.
 		var becreate bool = false
