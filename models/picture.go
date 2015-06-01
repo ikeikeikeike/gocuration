@@ -10,8 +10,9 @@ import (
 )
 
 type Picture struct {
-	Id       int64 `orm:"auto"`
-	PageView int64 `orm:"default(0);index"`
+	Id         int64 `orm:"auto"`
+	PageView   int64 `orm:"default(0);index"`
+	ImageCount int   `orm:"default(0);index"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
