@@ -130,12 +130,16 @@ func (e *Extractor) Urls() (urls []string) {
 // srcとurlでcontains ableなもの
 func (e *Extractor) Codes() (codes []string) {
 
-	var render = func(sel *gq.Selection) {
-		var buf bytes.Buffer
-		sel.Each(func(i int, s *gq.Selection) {
-			html.Render(&buf, s.Nodes[0])
-			codes = append(codes, str.Clean(buf.String()))
-		})
+	var render = func(selectors ...*gq.Selection) {
+		var raw string
+		for _, sel := range selectors {
+			var buf bytes.Buffer
+			sel.Each(func(i int, s *gq.Selection) {
+				html.Render(&buf, s.Nodes[0])
+				raw += str.Clean(buf.String())
+			})
+		}
+		codes = append(codes, raw)
 	}
 
 	// sel := e.doc.Find("iframe,script,embed,object").FilterFunction(func(i int, s *gq.Selection) bool {
@@ -150,12 +154,10 @@ func (e *Extractor) Codes() (codes []string) {
 			render(s)
 		}
 		if strings.Contains(src, "ero-video.net/js/embed_evplayer") {
-			render(s)
-			render(s.Next())
+			render(s, s.Next())
 		}
 		if strings.Contains(src, "asg.to/js/past_uraui") {
-			render(s)
-			render(s.Next())
+			render(s, s.Next())
 		}
 	})
 
