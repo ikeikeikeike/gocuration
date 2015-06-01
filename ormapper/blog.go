@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/picture"
 )
 
 type Blog struct {
@@ -45,6 +46,7 @@ type Blog struct {
 func (m *Blog) PictureShowLoader() {
 	PictureEntries().
 		Scopes(blog.FilterMediatype("image")).
+		Scopes(picture.ImageCountMoreThanOnce).
 		Where("blog.id = ?", m.Id).
 		Limit("20").
 		Order("entry.id DESC").
