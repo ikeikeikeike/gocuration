@@ -61,6 +61,16 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 		// Need video's primary id
 		v.Insert()
 
+		// Save video metas
+		for _, val := range urls {
+			vm := &models.VideoMeta{Url: val, Video: v}
+			vm.Insert()
+		}
+		for _, val := range codes {
+			vm := &models.VideoMeta{Code: val, Video: v}
+			vm.Insert()
+		}
+
 		// Save Diva
 		var divas []*models.Diva
 		for _, name := range ext.ByNames(diva.DivasName()) {

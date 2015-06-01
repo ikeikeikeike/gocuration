@@ -9,13 +9,44 @@ import (
 	"github.com/ikeikeikeike/gopkg/convert"
 )
 
+type VideoMeta struct {
+	Id int64 `orm:"auto"`
+
+	Url      string `orm:"size(255);null" form:"Url" valid:"Required;Match(/^https?/)"`
+	Code     string `orm:"type(text);default()"`
+	Duration int    `orm:"default(0);index"`
+
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now;type(datetime)"`
+
+	Video *Video `orm:"rel(fk);index"`
+	Site  *Site  `orm:"rel(fk);index;null"`
+}
+
+func (m *VideoMeta) Insert() error {
+	if _, err := orm.NewOrm().Insert(m); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *VideoMeta) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(m, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
 type Video struct {
 	Id int64 `orm:"auto"`
+
+	PageView int64 `orm:"default(0);index"`
 
 	Url      string `orm:"size(255);null" form:"Url" valid:"Required;Match(/^https?/)"`
 	Code     string `orm:"type(text);null"` // TODO: Change default value later.
 	Duration int    `orm:"default(0);index"`
-	PageView int64  `orm:"default(0);index"`
+
+	Metas []*VideoMeta `orm:"reverse(many)"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
@@ -32,6 +63,7 @@ func (m *Video) LoadRelated() *Video {
 	_, _ = o.LoadRelated(m, "Site")
 	_, _ = o.LoadRelated(m, "Entry")
 	_, _ = o.LoadRelated(m, "Divas", 2, DefaultPerEntities, 0, "-id")
+	_, _ = o.LoadRelated(m, "Metas", 2, DefaultPerEntities, 0, "-id")
 	return m
 }
 
@@ -83,4 +115,8 @@ func init() {
 	orm.RegisterModelWithPrefix(
 		beego.AppConfig.String("dbprefix"),
 		new(Video))
+
+	orm.RegisterModelWithPrefix(
+		beego.AppConfig.String("dbprefix"),
+		new(VideoMeta))
 }
