@@ -7,6 +7,7 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/diva"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/entry"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/video"
 	"github.com/astaxie/beego/utils/pagination"
 	"github.com/ikeikeikeike/gopkg/convert"
 	// "github.com/k0kubun/pp"
@@ -33,7 +34,7 @@ func (c *EntriesController) Home() {
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
-		Where(`video.url != ? OR video.code != ?`, "", "").
+		Scopes(video.HasVideo).
 		Limit(c.DefaultPers).
 		Order("summary.sort ASC").
 		Find(&summaries)
@@ -50,6 +51,7 @@ func (c *EntriesController) Home() {
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(video.HasVideo).
 		Limit(c.DefaultPers).
 		Order("entry.id DESC").
 		Find(&entries)
@@ -84,7 +86,8 @@ func (c *EntriesController) News() {
 		Scopes(diva.FilterBlood(c.GetString("blood"))).
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
-		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord()))
+		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
+		Scopes(video.HasVideo)
 
 	var count int64
 	db.Count(&count)
@@ -113,7 +116,7 @@ func (c *EntriesController) Hots() {
 		Scopes(diva.FilterBracup(c.GetStrings("cup"))).
 		Scopes(diva.FilterPrefixLines(c.GetString("line"))).
 		Scopes(entry.FilterQ(convert.StrTo(c.GetString("q")).MultiWord())).
-		Where(`video.url != ? OR video.code != ?`, "", "")
+		Scopes(video.HasVideo)
 
 	var count int64
 	db.Count(&count)
@@ -183,9 +186,9 @@ func (c *EntriesController) Show() {
 	}
 	ormapper.VideoShowSummaries().
 		Scopes(blog.FilterMediatype("movie")).
+		Scopes(video.HasVideo).
 		Where("entry.id != ?", m.Id).
 		Where("tag.name IN (?) OR entry.q like ?", in, fmt.Sprintf("%%%s%%", in[0])).
-		Where(`video.url != ? OR video.code != ?`, "", "").
 		Group("summary.id").
 		Order("summary.sort ASC").
 		Limit(15).

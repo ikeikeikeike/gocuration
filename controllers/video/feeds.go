@@ -8,6 +8,7 @@ import (
 	"bitbucket.org/ikeikeikeike/antenna/models/image"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/video"
 
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/gopkg/convert"
@@ -44,7 +45,7 @@ func (c *FeedsController) Rss() {
 
 	ormapper.VideoSummaries().
 		Scopes(blog.FilterMediatype("movie")).
-		Where(`video.url != ? OR video.code != ?`, "", "").
+		Scopes(video.HasVideo).
 		Limit(10).
 		Order("summary.sort ASC").
 		Find(&summaries)

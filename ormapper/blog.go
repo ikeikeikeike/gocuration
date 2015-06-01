@@ -6,6 +6,7 @@ import (
 
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/blog"
 	"bitbucket.org/ikeikeikeike/antenna/ormapper/picture"
+	"bitbucket.org/ikeikeikeike/antenna/ormapper/video"
 )
 
 type Blog struct {
@@ -60,6 +61,7 @@ func (m *Blog) PictureShowLoader() {
 func (m *Blog) VideoShowLoader() {
 	VideoEntries().
 		Scopes(blog.FilterMediatype("movie")).
+		Scopes(video.HasVideo).
 		Where("blog.id = ?", m.Id).
 		Limit("20").
 		Order("entry.id DESC").
