@@ -33,6 +33,7 @@ _testmain.go
 /bin/character
 /bin/diva
 /bin/summarize
+/bin/oneshot
 
 *.db
 
