@@ -5,13 +5,41 @@ import (
 	"time"
 )
 
+type VideoUrl struct {
+	Id int64
+
+	Name string
+
+	Created time.Time
+	Updated time.Time
+
+	Video   *Video
+	VideoId sql.NullInt64
+}
+
+type VideoCode struct {
+	Id int64
+
+	Name string
+
+	Created time.Time
+	Updated time.Time
+
+	Video   *Video
+	VideoId sql.NullInt64
+}
+
 type Video struct {
 	Id int64
+
+	PageView int64
 
 	Url      string
 	Code     string
 	Duration int
-	PageView int64
+
+	Urls  []*VideoUrl
+	Codes []*VideoCode
 
 	Created time.Time
 	Updated time.Time
@@ -26,6 +54,14 @@ type Video struct {
 }
 
 func (m *Video) NewsLoader() {
+
+	if len(m.Codes) <= 0 {
+		DB.Model(&m).Related(&m.Codes, "Codes")
+	}
+	if len(m.Urls) <= 0 {
+		DB.Model(&m).Related(&m.Urls, "Urls")
+	}
+
 	if len(m.Divas) <= 0 {
 		// XXX: 以下のクエリは order by diva.id asc なので注意が必要
 		DB.Model(&m).Preload("Icon").Association("Divas").

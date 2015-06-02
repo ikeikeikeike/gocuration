@@ -9,28 +9,50 @@ import (
 	"github.com/ikeikeikeike/gopkg/convert"
 )
 
-type VideoMeta struct {
+type VideoUrl struct {
 	Id int64 `orm:"auto"`
 
-	Url      string `orm:"size(255);null" form:"Url" valid:"Required;Match(/^https?/)"`
-	Code     string `orm:"type(text);default()"`
-	Duration int    `orm:"default(0);index"`
+	Name string `orm:"size(255);default()" valid:"Required;Match(/^https?/)"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
 
 	Video *Video `orm:"rel(fk);index"`
-	Site  *Site  `orm:"rel(fk);index;null"`
 }
 
-func (m *VideoMeta) Insert() error {
+func (m *VideoUrl) Insert() error {
 	if _, err := orm.NewOrm().Insert(m); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *VideoMeta) Update(fields ...string) error {
+func (m *VideoUrl) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(m, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
+type VideoCode struct {
+	Id int64 `orm:"auto"`
+
+	Name string `orm:"type(text);default()"`
+
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now;type(datetime)"`
+
+	Video *Video `orm:"rel(fk);index"`
+}
+
+func (m *VideoCode) Insert() error {
+	if _, err := orm.NewOrm().Insert(m); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *VideoCode) Update(fields ...string) error {
 	if _, err := orm.NewOrm().Update(m, fields...); err != nil {
 		return err
 	}
@@ -46,7 +68,8 @@ type Video struct {
 	Code     string `orm:"type(text);null"` // TODO: Change default value later.
 	Duration int    `orm:"default(0);index"`
 
-	Metas []*VideoMeta `orm:"reverse(many)"`
+	Urls  []*VideoUrl  `orm:"reverse(many)"`
+	Codes []*VideoCode `orm:"reverse(many)"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
@@ -63,7 +86,8 @@ func (m *Video) LoadRelated() *Video {
 	_, _ = o.LoadRelated(m, "Site")
 	_, _ = o.LoadRelated(m, "Entry")
 	_, _ = o.LoadRelated(m, "Divas", 2, DefaultPerEntities, 0, "-id")
-	_, _ = o.LoadRelated(m, "Metas", 2, DefaultPerEntities, 0, "-id")
+	_, _ = o.LoadRelated(m, "Codes", 2, DefaultPerEntities, 0, "-id")
+	_, _ = o.LoadRelated(m, "Urls", 2, DefaultPerEntities, 0, "-id")
 	return m
 }
 
@@ -118,5 +142,9 @@ func init() {
 
 	orm.RegisterModelWithPrefix(
 		beego.AppConfig.String("dbprefix"),
-		new(VideoMeta))
+		new(VideoUrl))
+
+	orm.RegisterModelWithPrefix(
+		beego.AppConfig.String("dbprefix"),
+		new(VideoCode))
 }

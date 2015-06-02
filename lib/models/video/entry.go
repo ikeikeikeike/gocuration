@@ -63,11 +63,11 @@ func AddsByEntries(entries []*models.Entry) (errs []error) {
 
 		// Save video metas
 		for _, val := range urls {
-			vm := &models.VideoMeta{Url: val, Video: v}
+			vm := &models.VideoUrl{Name: val, Video: v}
 			vm.Insert()
 		}
 		for _, val := range codes {
-			vm := &models.VideoMeta{Code: val, Video: v}
+			vm := &models.VideoCode{Name: val, Video: v}
 			vm.Insert()
 		}
 
