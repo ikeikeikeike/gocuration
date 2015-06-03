@@ -77,7 +77,7 @@ func (m *Score) Delete() error {
 }
 
 func Scores() orm.QuerySeter {
-	return orm.NewOrm().QueryTable("blog").OrderBy("-Id")
+	return orm.NewOrm().QueryTable("score").OrderBy("-Id")
 }
 
 func init() {
