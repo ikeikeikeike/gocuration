@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/jinzhu/now"
 
 	_ "bitbucket.org/ikeikeikeike/antenna/conf/inits"
+	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/ranking"
 	_ "bitbucket.org/ikeikeikeike/antenna/routers"
 )
@@ -53,6 +55,35 @@ func TestRanking(t *testing.T) {
 	check(t, err, "yearly create", path)
 	_, err = o.QueryTable("entry_ranking").Filter("entry", id).SetCond(yearly).Update(docount)
 	check(t, err, "yearly", path)
+
+	type rankUpdater interface {
+		UpdateRank(rank int64) error
+	}
+	var updateRank = func(ranks interface{}) {
+		values := reflect.ValueOf(ranks)
+
+		for i := 0; i < values.Len(); i++ {
+			r := values.Index(i).Interface().(rankUpdater)
+			r.UpdateRank(int64(i + 1))
+		}
+	}
+
+	var eranks []*models.EntryRanking
+	o.QueryTable("entry_ranking").SetCond(dayly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(weekly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(monthly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(yearly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
 }
 
 func check(t *testing.T, err error, args ...interface{}) {

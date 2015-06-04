@@ -32,6 +32,14 @@ func (m *EntryRanking) ReadOrCreate(field string, fields ...string) (bool, int64
 	return orm.NewOrm().ReadOrCreate(m, field, fields...)
 }
 
+func (m *EntryRanking) UpdateRank(rank int64) error {
+	m.Rank = rank
+	if _, err := orm.NewOrm().Update(m, "Rank"); err != nil {
+		return err
+	}
+	return nil
+}
+
 type VideoRanking struct {
 	Id int64 `orm:"auto"`
 
@@ -52,8 +60,17 @@ func (m *VideoRanking) LoadRelated() *VideoRanking {
 	_, _ = o.LoadRelated(m, "Video", 2, DefaultPerEntities)
 	return m
 }
+
 func (m *VideoRanking) ReadOrCreate(field string, fields ...string) (bool, int64, error) {
 	return orm.NewOrm().ReadOrCreate(m, field, fields...)
+}
+
+func (m *VideoRanking) UpdateRank(rank int64) error {
+	m.Rank = rank
+	if _, err := orm.NewOrm().Update(m, "Rank"); err != nil {
+		return err
+	}
+	return nil
 }
 
 type PictureRanking struct {
@@ -76,8 +93,17 @@ func (m *PictureRanking) LoadRelated() *PictureRanking {
 	_, _ = o.LoadRelated(m, "Picture", 2, DefaultPerEntities)
 	return m
 }
+
 func (m *PictureRanking) ReadOrCreate(field string, fields ...string) (bool, int64, error) {
 	return orm.NewOrm().ReadOrCreate(m, field, fields...)
+}
+
+func (m *PictureRanking) UpdateRank(rank int64) error {
+	m.Rank = rank
+	if _, err := orm.NewOrm().Update(m, "Rank"); err != nil {
+		return err
+	}
+	return nil
 }
 
 func EntryRankings() orm.QuerySeter {
