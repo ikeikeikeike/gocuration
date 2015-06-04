@@ -2,9 +2,11 @@ package summarize
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/lib/accessctl"
+	"bitbucket.org/ikeikeikeike/antenna/models"
 	"bitbucket.org/ikeikeikeike/antenna/models/ranking"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -24,6 +26,11 @@ func Showcounter() (err error) {
 	month := now.BeginningOfMonth().Add(jst)
 	year := now.BeginningOfYear().Add(jst)
 
+	dayly := cond.And("begin_time", day).And("begin_name", "dayly")
+	weekly := cond.And("begin_time", week).And("begin_name", "weekly")
+	monthly := cond.And("begin_time", month).And("begin_name", "monthly")
+	yearly := cond.And("begin_time", year).And("begin_name", "yearly")
+
 	for _, path := range []string{"elog", "video", "book"} {
 		results, err := c.Counting(path)
 		if err != nil {
@@ -32,11 +39,6 @@ func Showcounter() (err error) {
 
 		for _, r := range results {
 			var err error
-
-			dayly := cond.And("begin_time", day).And("begin_name", "dayly")
-			weekly := cond.And("begin_time", week).And("begin_name", "weekly")
-			monthly := cond.And("begin_time", month).And("begin_name", "monthly")
-			yearly := cond.And("begin_time", year).And("begin_name", "yearly")
 
 			docount := orm.Params{"page_view": orm.ColValue(orm.Col_Add, r.Count)}
 
@@ -113,6 +115,66 @@ func Showcounter() (err error) {
 			}
 		}
 	}
+
+	type rankUpdater interface {
+		UpdateRank(rank int64) error
+	}
+	var updateRank = func(ranks interface{}) {
+		values := reflect.ValueOf(ranks)
+
+		for i := 0; i < values.Len(); i++ {
+			r := values.Index(i).Interface().(rankUpdater)
+			r.UpdateRank(int64(i + 1))
+		}
+	}
+
+	var eranks []*models.EntryRanking
+	o.QueryTable("entry_ranking").SetCond(dayly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(weekly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(monthly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	eranks = make([]*models.EntryRanking, 0)
+	o.QueryTable("entry_ranking").SetCond(yearly).OrderBy("-page_view").All(&eranks)
+	updateRank(eranks)
+
+	var vranks []*models.VideoRanking
+	o.QueryTable("video_ranking").SetCond(dayly).OrderBy("-page_view").All(&vranks)
+	updateRank(vranks)
+
+	vranks = make([]*models.VideoRanking, 0)
+	o.QueryTable("video_ranking").SetCond(weekly).OrderBy("-page_view").All(&vranks)
+	updateRank(vranks)
+
+	vranks = make([]*models.VideoRanking, 0)
+	o.QueryTable("video_ranking").SetCond(monthly).OrderBy("-page_view").All(&vranks)
+	updateRank(vranks)
+
+	vranks = make([]*models.VideoRanking, 0)
+	o.QueryTable("video_ranking").SetCond(yearly).OrderBy("-page_view").All(&vranks)
+	updateRank(vranks)
+
+	var pranks []*models.PictureRanking
+	o.QueryTable("picture_ranking").SetCond(dayly).OrderBy("-page_view").All(&pranks)
+	updateRank(pranks)
+
+	pranks = make([]*models.PictureRanking, 0)
+	o.QueryTable("picture_ranking").SetCond(weekly).OrderBy("-page_view").All(&pranks)
+	updateRank(pranks)
+
+	pranks = make([]*models.PictureRanking, 0)
+	o.QueryTable("picture_ranking").SetCond(monthly).OrderBy("-page_view").All(&pranks)
+	updateRank(pranks)
+
+	pranks = make([]*models.PictureRanking, 0)
+	o.QueryTable("picture_ranking").SetCond(yearly).OrderBy("-page_view").All(&pranks)
+	updateRank(pranks)
 
 	return
 }
