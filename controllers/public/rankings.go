@@ -21,14 +21,14 @@ func (c *RankingsController) Index() {
 	c.TplNames = "public/rankings/index.tpl"
 
 	pers := c.DefaultPers
-	qs := models.Rankings().RelatedSel()
+	qs := models.EntryRankings().RelatedSel()
 
 	cnt, _ := models.CountObjects(qs)
 	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
 
 	qs = qs.Limit(pers, pager.Offset())
 
-	var rankings []*models.Ranking
+	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
 	c.Data["QURL"] = ""
