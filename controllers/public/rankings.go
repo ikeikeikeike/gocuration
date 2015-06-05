@@ -27,7 +27,95 @@ func (c *RankingsController) Index() {
 	if beego.AppConfig.String("runmode") == "prod" {
 		day = now.BeginningOfDay()
 	} else {
-		day = now.BeginningOfDay().Add(time.Duration(9) * time.Hour)
+		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+	}
+
+	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Filter("begin_time", day)
+	qs = qs.Limit(100, 0)
+
+	var rankings []*models.EntryRanking
+	models.ListObjects(qs, &rankings)
+
+	c.Data["QURL"] = ""
+	c.Data["Rankings"] = rankings
+}
+
+func (c *RankingsController) Dayly() {
+	c.TplNames = "public/rankings/index.tpl"
+
+	var day time.Time
+	if beego.AppConfig.String("runmode") == "prod" {
+		day = now.BeginningOfDay()
+	} else {
+		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+	}
+
+	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Filter("begin_time", day)
+	qs = qs.Limit(100, 0)
+
+	var rankings []*models.EntryRanking
+	models.ListObjects(qs, &rankings)
+
+	c.Data["QURL"] = ""
+	c.Data["Rankings"] = rankings
+}
+
+func (c *RankingsController) Weekly() {
+	c.TplNames = "public/rankings/index.tpl"
+
+	var day time.Time
+	if beego.AppConfig.String("runmode") == "prod" {
+		day = now.BeginningOfDay()
+	} else {
+		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+	}
+
+	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Filter("begin_time", day)
+	qs = qs.Limit(100, 0)
+
+	var rankings []*models.EntryRanking
+	models.ListObjects(qs, &rankings)
+
+	c.Data["QURL"] = ""
+	c.Data["Rankings"] = rankings
+}
+
+func (c *RankingsController) Monthly() {
+	c.TplNames = "public/rankings/index.tpl"
+
+	var day time.Time
+	if beego.AppConfig.String("runmode") == "prod" {
+		day = now.BeginningOfDay()
+	} else {
+		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+	}
+
+	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Filter("begin_time", day)
+	qs = qs.Limit(100, 0)
+
+	var rankings []*models.EntryRanking
+	models.ListObjects(qs, &rankings)
+
+	c.Data["QURL"] = ""
+	c.Data["Rankings"] = rankings
+}
+
+func (c *RankingsController) Yearly() {
+	c.TplNames = "public/rankings/index.tpl"
+
+	var day time.Time
+	if beego.AppConfig.String("runmode") == "prod" {
+		day = now.BeginningOfDay()
+	} else {
+		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
