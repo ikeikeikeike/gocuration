@@ -22,6 +22,8 @@ func init() {
 	beego.Router(`/blog/v:id([0-9]+)/`, &video.BlogsController{}, "get:Show")
 	beego.Router(`/blog/v:id([0-9]+)/:title(.*)?`, &video.BlogsController{}, "get:Show")
 
+	beego.Router("/ranking.html", &video.RankingsController{}, "get:Index")
+
 	beego.Router("/tags.html", &video.TagsController{}, "get:Index")
 	beego.Router(`/tag/:name`, &video.TagsController{}, "get:Show")
 
