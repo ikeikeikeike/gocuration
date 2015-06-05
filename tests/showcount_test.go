@@ -19,11 +19,10 @@ func TestRanking(t *testing.T) {
 	o := orm.NewOrm()
 	cond := orm.NewCondition()
 
-	jst := time.Duration(9) * time.Hour
-	day := now.BeginningOfDay().Add(jst)
-	week := now.BeginningOfWeek().Add(jst)
-	month := now.BeginningOfMonth().Add(jst)
-	year := now.BeginningOfYear().Add(jst)
+	day := now.BeginningOfDay()
+	week := now.BeginningOfWeek()
+	month := now.BeginningOfMonth()
+	year := now.BeginningOfYear()
 
 	dayly := cond.And("begin_time", day).And("begin_name", "dayly")
 	weekly := cond.And("begin_time", week).And("begin_name", "weekly")

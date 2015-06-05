@@ -22,6 +22,13 @@ type EntryRanking struct {
 	Entry *Entry `orm:"rel(fk);index"`
 }
 
+// multiple fields unique key
+func (u *EntryRanking) TableUnique() [][]string {
+	return [][]string{
+		[]string{"BeginName", "BeginTime", "Entry"},
+	}
+}
+
 func (m *EntryRanking) LoadRelated() *EntryRanking {
 	o := orm.NewOrm()
 	_, _ = o.LoadRelated(m, "Entry", 2, DefaultPerEntities)
@@ -40,6 +47,33 @@ func (m *EntryRanking) UpdateRank(rank int64) error {
 	return nil
 }
 
+func (m *EntryRanking) PreviousRanking() (*EntryRanking, error) {
+	var duration = m.BeginTime
+	switch m.BeginName {
+	case "dayly":
+		duration = duration.Add(-time.Hour * 24)
+	case "weekly":
+		duration = duration.AddDate(0, 0, -7)
+	case "monthly":
+		duration = duration.AddDate(0, -1, 0)
+	case "yearly":
+		duration = duration.AddDate(-1, 0, 0)
+	}
+
+	qs := orm.NewOrm().QueryTable("entry_ranking").
+		Filter("entry", m.Entry.Id).
+		Filter("begin_time", duration).
+		Filter("begin_name", m.BeginName)
+
+	var prev EntryRanking
+	err := qs.One(&prev)
+	if err != nil {
+		return nil, err
+	}
+
+	return &prev, nil
+}
+
 type VideoRanking struct {
 	Id int64 `orm:"auto"`
 
@@ -53,6 +87,13 @@ type VideoRanking struct {
 	Updated time.Time `orm:"auto_now;type(datetime)"`
 
 	Video *Video `orm:"rel(fk);index"`
+}
+
+// multiple fields unique key
+func (u *VideoRanking) TableUnique() [][]string {
+	return [][]string{
+		[]string{"BeginName", "BeginTime", "Video"},
+	}
 }
 
 func (m *VideoRanking) LoadRelated() *VideoRanking {
@@ -88,6 +129,12 @@ type PictureRanking struct {
 	Picture *Picture `orm:"rel(fk);index"`
 }
 
+func (u *PictureRanking) TableUnique() [][]string {
+	return [][]string{
+		[]string{"BeginName", "BeginTime", "Picture"},
+	}
+}
+
 func (m *PictureRanking) LoadRelated() *PictureRanking {
 	o := orm.NewOrm()
 	_, _ = o.LoadRelated(m, "Picture", 2, DefaultPerEntities)
@@ -107,15 +154,15 @@ func (m *PictureRanking) UpdateRank(rank int64) error {
 }
 
 func EntryRankings() orm.QuerySeter {
-	return orm.NewOrm().QueryTable("entry_ranking").OrderBy("-Id")
+	return orm.NewOrm().QueryTable("entry_ranking").OrderBy("Rank")
 }
 
 func VideoRankings() orm.QuerySeter {
-	return orm.NewOrm().QueryTable("video_ranking").OrderBy("-Id")
+	return orm.NewOrm().QueryTable("video_ranking").OrderBy("Rank")
 }
 
 func PictureRankings() orm.QuerySeter {
-	return orm.NewOrm().QueryTable("picture_ranking").OrderBy("-Id")
+	return orm.NewOrm().QueryTable("picture_ranking").OrderBy("Rank")
 }
 
 func init() {

@@ -2,10 +2,10 @@ package public
 
 import (
 	"bitbucket.org/ikeikeikeike/antenna/models"
-
-	"github.com/astaxie/beego/utils/pagination"
-	// "github.com/k0kubun/pp"
+	"github.com/jinzhu/now"
 )
+
+// "github.com/k0kubun/pp"
 
 type RankingsController struct {
 	BaseController
@@ -20,13 +20,12 @@ func (c *RankingsController) NestFinish() {
 func (c *RankingsController) Index() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	pers := c.DefaultPers
+	day := now.BeginningOfDay() //.Add(- time.Duration(9) * time.Hour)
+
 	qs := models.EntryRankings().RelatedSel()
-
-	cnt, _ := models.CountObjects(qs)
-	pager := pagination.SetPaginator(c.Ctx, pers, cnt)
-
-	qs = qs.Limit(pers, pager.Offset())
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Filter("begin_time", day)
+	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
