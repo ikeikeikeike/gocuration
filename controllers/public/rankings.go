@@ -23,16 +23,16 @@ func (c *RankingsController) NestFinish() {
 func (c *RankingsController) Index() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var day time.Time
+	var t time.Time
 	if beego.AppConfig.String("runmode") == "prod" {
-		day = now.BeginningOfDay()
+		t = now.BeginningOfDay()
 	} else {
-		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+		t = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", day)
+	qs = qs.Filter("begin_time", t)
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -45,16 +45,16 @@ func (c *RankingsController) Index() {
 func (c *RankingsController) Dayly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var day time.Time
+	var t time.Time
 	if beego.AppConfig.String("runmode") == "prod" {
-		day = now.BeginningOfDay()
+		t = now.BeginningOfDay()
 	} else {
-		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+		t = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", day)
+	qs = qs.Filter("begin_time", t)
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -67,16 +67,16 @@ func (c *RankingsController) Dayly() {
 func (c *RankingsController) Weekly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var day time.Time
+	var t time.Time
 	if beego.AppConfig.String("runmode") == "prod" {
-		day = now.BeginningOfDay()
+		t = now.BeginningOfWeek()
 	} else {
-		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+		t = now.BeginningOfWeek().Add(time.Duration(9) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
-	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", day)
+	qs = qs.Filter("begin_name", "weekly")
+	qs = qs.Filter("begin_time", t)
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -89,16 +89,16 @@ func (c *RankingsController) Weekly() {
 func (c *RankingsController) Monthly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var day time.Time
+	var t time.Time
 	if beego.AppConfig.String("runmode") == "prod" {
-		day = now.BeginningOfDay()
+		t = now.BeginningOfMonth()
 	} else {
-		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+		t = now.BeginningOfMonth().Add(time.Duration(9) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
-	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", day)
+	qs = qs.Filter("begin_name", "monthly")
+	qs = qs.Filter("begin_time", t)
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -111,16 +111,16 @@ func (c *RankingsController) Monthly() {
 func (c *RankingsController) Yearly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var day time.Time
+	var t time.Time
 	if beego.AppConfig.String("runmode") == "prod" {
-		day = now.BeginningOfDay()
+		t = now.BeginningOfYear()
 	} else {
-		day = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
+		t = now.BeginningOfYear().Add(time.Duration(9) * time.Hour)
 	}
 
 	qs := models.EntryRankings().RelatedSel()
-	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", day)
+	qs = qs.Filter("begin_name", "yearly")
+	qs = qs.Filter("begin_time", t)
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking

@@ -26,6 +26,10 @@ func init() {
 	beego.Router(`/blog/v:id([0-9]+)/:title(.*)?`, &public.BlogsController{}, "get:Show")
 
 	beego.Router("/ranking.html", &public.RankingsController{}, "get:Index")
+	beego.Router("/ranking/dayly", &public.RankingsController{}, "get:Dayly")
+	beego.Router("/ranking/weekly", &public.RankingsController{}, "get:Weekly")
+	beego.Router("/ranking/monthly", &public.RankingsController{}, "get:Monthly")
+	beego.Router("/ranking/yearly", &public.RankingsController{}, "get:Yearly")
 
 	beego.Router("/tags.html", &public.TagsController{}, "get:Index")
 	beego.Router(`/tag/:name`, &public.TagsController{}, "get:Show")
