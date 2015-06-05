@@ -47,22 +47,22 @@ func Showcounter() (err error) {
 
 				_, _, err = ranking.ReadOrCreateEntry(r.ID, "dayly", day)
 				check(err, "dayly create", path)
-				_, err = o.QueryTable("entry_ranking").Filter("entry", r.ID).SetCond(dayly).Update(docount)
+				_, err = o.QueryTable("entry_ranking").SetCond(dayly).Filter("entry", r.ID).Update(docount)
 				check(err, "dayly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateEntry(r.ID, "weekly", week)
 				check(err, "weekly create", path)
-				_, err = o.QueryTable("entry_ranking").Filter("entry", r.ID).SetCond(weekly).Update(docount)
+				_, err = o.QueryTable("entry_ranking").SetCond(weekly).Filter("entry", r.ID).Update(docount)
 				check(err, "weekly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateEntry(r.ID, "monthly", month)
 				check(err, "weekly create", path)
-				_, err = o.QueryTable("entry_ranking").Filter("entry", r.ID).SetCond(monthly).Update(docount)
+				_, err = o.QueryTable("entry_ranking").SetCond(monthly).Filter("entry", r.ID).Update(docount)
 				check(err, "monthly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateEntry(r.ID, "yearly", year)
 				check(err, "yearly create", path)
-				_, err = o.QueryTable("entry_ranking").Filter("entry", r.ID).SetCond(yearly).Update(docount)
+				_, err = o.QueryTable("entry_ranking").SetCond(yearly).Filter("entry", r.ID).Update(docount)
 				check(err, "yearly ranking", path)
 			case "video":
 				_, err = o.QueryTable("video").Filter("entry", r.ID).Update(docount)
@@ -70,22 +70,22 @@ func Showcounter() (err error) {
 
 				_, _, err = ranking.ReadOrCreateVideo(r.ID, "dayly", day)
 				check(err, "dayly create", path)
-				_, err = o.QueryTable("video_ranking").Filter("video__entry", r.ID).SetCond(dayly).Update(docount)
+				_, err = o.QueryTable("video_ranking").SetCond(dayly).Filter("video__entry__id", r.ID).Update(docount)
 				check(err, "dayly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateVideo(r.ID, "weekly", week)
 				check(err, "weekly create", path)
-				_, err = o.QueryTable("video_ranking").Filter("video__entry", r.ID).SetCond(weekly).Update(docount)
+				_, err = o.QueryTable("video_ranking").SetCond(weekly).Filter("video__entry__id", r.ID).Update(docount)
 				check(err, "weekly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateVideo(r.ID, "monthly", month)
 				check(err, "monthly create", path)
-				_, err = o.QueryTable("video_ranking").Filter("video__entry", r.ID).SetCond(monthly).Update(docount)
+				_, err = o.QueryTable("video_ranking").SetCond(monthly).Filter("video__entry__id", r.ID).Update(docount)
 				check(err, "monthly ranking", path)
 
 				_, _, err = ranking.ReadOrCreateVideo(r.ID, "yearly", year)
 				check(err, "yearly create", path)
-				_, err = o.QueryTable("video_ranking").Filter("video__entry", r.ID).SetCond(yearly).Update(docount)
+				_, err = o.QueryTable("video_ranking").SetCond(yearly).Filter("video__entry__id", r.ID).Update(docount)
 				check(err, "yearly ranking", path)
 			case "book":
 				_, err = o.QueryTable("picture").Filter("entry", r.ID).Update(docount)
@@ -93,22 +93,22 @@ func Showcounter() (err error) {
 
 				_, _, err = ranking.ReadOrCreatePicture(r.ID, "dayly", day)
 				check(err, "dayly create", path)
-				_, err = o.QueryTable("picture_ranking").Filter("picture__entry", r.ID).SetCond(dayly).Update(docount)
+				_, err = o.QueryTable("picture_ranking").SetCond(dayly).Filter("picture__entry__id", r.ID).Update(docount)
 				check(err, "dayly ranking", path)
 
 				_, _, err = ranking.ReadOrCreatePicture(r.ID, "weekly", week)
 				check(err, "weekly create", path)
-				_, err = o.QueryTable("picture_ranking").Filter("picture__entry", r.ID).SetCond(weekly).Update(docount)
+				_, err = o.QueryTable("picture_ranking").SetCond(weekly).Filter("picture__entry__id", r.ID).Update(docount)
 				check(err, "weekly ranking", path)
 
 				_, _, err = ranking.ReadOrCreatePicture(r.ID, "monthly", month)
 				check(err, "monthly create", path)
-				_, err = o.QueryTable("picture_ranking").Filter("picture__entry", r.ID).SetCond(monthly).Update(docount)
+				_, err = o.QueryTable("picture_ranking").SetCond(monthly).Filter("picture__entry__id", r.ID).Update(docount)
 				check(err, "monthly ranking", path)
 
 				_, _, err = ranking.ReadOrCreatePicture(r.ID, "yearly", year)
 				check(err, "yearly create", path)
-				_, err = o.QueryTable("picture_ranking").Filter("picture__entry", r.ID).SetCond(yearly).Update(docount)
+				_, err = o.QueryTable("picture_ranking").SetCond(yearly).Filter("picture__entry__id", r.ID).Update(docount)
 				check(err, "yearly ranking", path)
 			}
 		}

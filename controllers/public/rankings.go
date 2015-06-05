@@ -1,7 +1,10 @@
 package public
 
 import (
+	"time"
+
 	"bitbucket.org/ikeikeikeike/antenna/models"
+	"github.com/astaxie/beego"
 	"github.com/jinzhu/now"
 )
 
@@ -20,7 +23,12 @@ func (c *RankingsController) NestFinish() {
 func (c *RankingsController) Index() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	day := now.BeginningOfDay() //.Add(- time.Duration(9) * time.Hour)
+	var day time.Time
+	if beego.AppConfig.String("runmode") == "prod" {
+		day = now.BeginningOfDay()
+	} else {
+		day = now.BeginningOfDay().Add(time.Duration(9) * time.Hour)
+	}
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "dayly")
