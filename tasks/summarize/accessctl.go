@@ -3,6 +3,7 @@ package summarize
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/lib/accessctl"
 	"bitbucket.org/ikeikeikeike/antenna/models"
@@ -19,10 +20,11 @@ func Showcounter() (err error) {
 	c := accessctl.NewShowCounter()
 	c.Bootstrap()
 
-	day := now.BeginningOfDay()
-	week := now.BeginningOfWeek()
-	month := now.BeginningOfMonth()
-	year := now.BeginningOfYear()
+	t := time.Now().UTC()
+	day := now.New(t).BeginningOfDay()
+	week := now.New(t).BeginningOfWeek()
+	month := now.New(t).BeginningOfMonth()
+	year := now.New(t).BeginningOfYear()
 
 	dayly := cond.And("begin_time", day).And("begin_name", "dayly")
 	weekly := cond.And("begin_time", week).And("begin_name", "weekly")
@@ -179,6 +181,6 @@ func Showcounter() (err error) {
 
 func check(err error, args ...interface{}) {
 	if err != nil {
-		beego.Warn(fmt.Sprintf("Update PageView by %v: ", args), err)
+		beego.Notice(fmt.Sprintf("Update PageView by %v: ", args), err)
 	}
 }

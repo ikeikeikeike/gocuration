@@ -48,7 +48,8 @@ func (m *EntryRanking) UpdateRank(rank int64) error {
 }
 
 func (m *EntryRanking) PreviousRanking() (*EntryRanking, error) {
-	var duration = m.BeginTime
+	var duration = m.BeginTime.UTC()
+
 	switch m.BeginName {
 	case "dayly":
 		duration = duration.Add(-time.Hour * 24)

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/models"
-	"github.com/astaxie/beego"
 	"github.com/jinzhu/now"
 )
 
@@ -23,12 +22,8 @@ func (c *RankingsController) NestFinish() {
 func (c *RankingsController) Index() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var t time.Time
-	if beego.AppConfig.String("runmode") == "prod" {
-		t = now.BeginningOfDay()
-	} else {
-		t = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
-	}
+	t := time.Now().UTC()
+	t = now.New(t).BeginningOfDay()
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "dayly")
@@ -38,19 +33,14 @@ func (c *RankingsController) Index() {
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
-	c.Data["QURL"] = ""
 	c.Data["Rankings"] = rankings
 }
 
 func (c *RankingsController) Dayly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var t time.Time
-	if beego.AppConfig.String("runmode") == "prod" {
-		t = now.BeginningOfDay()
-	} else {
-		t = now.BeginningOfDay().Add(-time.Duration(15) * time.Hour)
-	}
+	t := time.Now().UTC()
+	t = now.New(t).BeginningOfDay()
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "dayly")
@@ -60,19 +50,14 @@ func (c *RankingsController) Dayly() {
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
-	c.Data["QURL"] = ""
 	c.Data["Rankings"] = rankings
 }
 
 func (c *RankingsController) Weekly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var t time.Time
-	if beego.AppConfig.String("runmode") == "prod" {
-		t = now.BeginningOfWeek()
-	} else {
-		t = now.BeginningOfWeek().Add(time.Duration(9) * time.Hour)
-	}
+	t := time.Now().UTC()
+	t = now.New(t).BeginningOfWeek()
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "weekly")
@@ -82,19 +67,14 @@ func (c *RankingsController) Weekly() {
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
-	c.Data["QURL"] = ""
 	c.Data["Rankings"] = rankings
 }
 
 func (c *RankingsController) Monthly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var t time.Time
-	if beego.AppConfig.String("runmode") == "prod" {
-		t = now.BeginningOfMonth()
-	} else {
-		t = now.BeginningOfMonth().Add(time.Duration(9) * time.Hour)
-	}
+	t := time.Now().UTC()
+	t = now.New(t).BeginningOfMonth()
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "monthly")
@@ -104,19 +84,14 @@ func (c *RankingsController) Monthly() {
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
-	c.Data["QURL"] = ""
 	c.Data["Rankings"] = rankings
 }
 
 func (c *RankingsController) Yearly() {
 	c.TplNames = "public/rankings/index.tpl"
 
-	var t time.Time
-	if beego.AppConfig.String("runmode") == "prod" {
-		t = now.BeginningOfYear()
-	} else {
-		t = now.BeginningOfYear().Add(time.Duration(9) * time.Hour)
-	}
+	t := time.Now().UTC()
+	t = now.New(t).BeginningOfYear()
 
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("begin_name", "yearly")
@@ -126,6 +101,5 @@ func (c *RankingsController) Yearly() {
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
-	c.Data["QURL"] = ""
 	c.Data["Rankings"] = rankings
 }
