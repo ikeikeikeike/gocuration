@@ -129,51 +129,51 @@ func Showcounter() (err error) {
 	}
 
 	var eranks []*models.EntryRanking
-	o.QueryTable("entry_ranking").SetCond(dayly).OrderBy("-page_view").All(&eranks)
+	o.QueryTable("entry_ranking").SetCond(dayly).OrderBy("-page_view").Limit(10000000).All(&eranks)
 	updateRank(eranks)
 
 	eranks = make([]*models.EntryRanking, 0)
-	o.QueryTable("entry_ranking").SetCond(weekly).OrderBy("-page_view").All(&eranks)
+	o.QueryTable("entry_ranking").SetCond(weekly).OrderBy("-page_view").Limit(10000000).All(&eranks)
 	updateRank(eranks)
 
 	eranks = make([]*models.EntryRanking, 0)
-	o.QueryTable("entry_ranking").SetCond(monthly).OrderBy("-page_view").All(&eranks)
+	o.QueryTable("entry_ranking").SetCond(monthly).OrderBy("-page_view").Limit(10000000).All(&eranks)
 	updateRank(eranks)
 
 	eranks = make([]*models.EntryRanking, 0)
-	o.QueryTable("entry_ranking").SetCond(yearly).OrderBy("-page_view").All(&eranks)
+	o.QueryTable("entry_ranking").SetCond(yearly).OrderBy("-page_view").Limit(10000000).All(&eranks)
 	updateRank(eranks)
 
 	var vranks []*models.VideoRanking
-	o.QueryTable("video_ranking").SetCond(dayly).OrderBy("-page_view").All(&vranks)
+	o.QueryTable("video_ranking").SetCond(dayly).OrderBy("-page_view").Limit(10000000).All(&vranks)
 	updateRank(vranks)
 
 	vranks = make([]*models.VideoRanking, 0)
-	o.QueryTable("video_ranking").SetCond(weekly).OrderBy("-page_view").All(&vranks)
+	o.QueryTable("video_ranking").SetCond(weekly).OrderBy("-page_view").Limit(10000000).All(&vranks)
 	updateRank(vranks)
 
 	vranks = make([]*models.VideoRanking, 0)
-	o.QueryTable("video_ranking").SetCond(monthly).OrderBy("-page_view").All(&vranks)
+	o.QueryTable("video_ranking").SetCond(monthly).OrderBy("-page_view").Limit(10000000).All(&vranks)
 	updateRank(vranks)
 
 	vranks = make([]*models.VideoRanking, 0)
-	o.QueryTable("video_ranking").SetCond(yearly).OrderBy("-page_view").All(&vranks)
+	o.QueryTable("video_ranking").SetCond(yearly).OrderBy("-page_view").Limit(10000000).All(&vranks)
 	updateRank(vranks)
 
 	var pranks []*models.PictureRanking
-	o.QueryTable("picture_ranking").SetCond(dayly).OrderBy("-page_view").All(&pranks)
+	o.QueryTable("picture_ranking").SetCond(dayly).OrderBy("-page_view").Limit(10000000).All(&pranks)
 	updateRank(pranks)
 
 	pranks = make([]*models.PictureRanking, 0)
-	o.QueryTable("picture_ranking").SetCond(weekly).OrderBy("-page_view").All(&pranks)
+	o.QueryTable("picture_ranking").SetCond(weekly).OrderBy("-page_view").Limit(10000000).All(&pranks)
 	updateRank(pranks)
 
 	pranks = make([]*models.PictureRanking, 0)
-	o.QueryTable("picture_ranking").SetCond(monthly).OrderBy("-page_view").All(&pranks)
+	o.QueryTable("picture_ranking").SetCond(monthly).OrderBy("-page_view").Limit(10000000).All(&pranks)
 	updateRank(pranks)
 
 	pranks = make([]*models.PictureRanking, 0)
-	o.QueryTable("picture_ranking").SetCond(yearly).OrderBy("-page_view").All(&pranks)
+	o.QueryTable("picture_ranking").SetCond(yearly).OrderBy("-page_view").Limit(10000000).All(&pranks)
 	updateRank(pranks)
 
 	return

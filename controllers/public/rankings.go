@@ -23,6 +23,7 @@ func (c *RankingsController) Dayly() {
 	c.TplNames = "public/rankings/dayly.tpl"
 
 	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "dayly")
 	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfDay())
 	qs = qs.Limit(100, 0)
@@ -37,6 +38,7 @@ func (c *RankingsController) Weekly() {
 	c.TplNames = "public/rankings/weekly.tpl"
 
 	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "weekly")
 	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfWeek())
 	qs = qs.Limit(100, 0)
@@ -51,6 +53,7 @@ func (c *RankingsController) Monthly() {
 	c.TplNames = "public/rankings/monthly.tpl"
 
 	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "monthly")
 	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfMonth())
 	qs = qs.Limit(100, 0)
@@ -65,6 +68,7 @@ func (c *RankingsController) Yearly() {
 	c.TplNames = "public/rankings/yearly.tpl"
 
 	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "yearly")
 	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfYear())
 	qs = qs.Limit(100, 0)
