@@ -47,32 +47,21 @@ func (m *EntryRanking) UpdateRank(rank int64) error {
 	return nil
 }
 
-func (m *EntryRanking) PreviousRanking() (*EntryRanking, error) {
-	var duration = m.BeginTime.UTC()
-
-	switch m.BeginName {
-	case "dayly":
-		duration = duration.Add(-time.Hour * 24)
-	case "weekly":
-		duration = duration.AddDate(0, 0, -7)
-	case "monthly":
-		duration = duration.AddDate(0, -1, 0)
-	case "yearly":
-		duration = duration.AddDate(-1, 0, 0)
-	}
-
+func (m *EntryRanking) PreviousRanking() *EntryRanking {
 	qs := orm.NewOrm().QueryTable("entry_ranking").
+		Exclude("id", m.Id).
 		Filter("entry", m.Entry.Id).
-		Filter("begin_time", duration).
-		Filter("begin_name", m.BeginName)
+		Filter("begin_name", m.BeginName).
+		OrderBy("-begin_time").
+		Limit(1)
 
 	var prev EntryRanking
 	err := qs.One(&prev)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
-	return &prev, nil
+	return &prev
 }
 
 type VideoRanking struct {
