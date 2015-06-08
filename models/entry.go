@@ -12,6 +12,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/fatih/structs"
 	"github.com/ikeikeikeike/gopkg/convert"
+	"github.com/jinzhu/now"
 
 	sani "github.com/kennygrant/sanitize"
 	attr "github.com/oleiade/reflections"
@@ -204,6 +205,36 @@ func (m *Entry) SetQ() *Entry {
 
 	m.Q = strings.Join(strs, " ")
 	return m
+}
+
+func (m *Entry) TodayRanking(name string) *EntryRanking {
+	cond := orm.NewCondition()
+	n := now.New(time.Now().UTC())
+
+	switch name {
+	case "w", "weekly":
+		cond = cond.And("begin_time", n.BeginningOfWeek()).And("begin_name", "weekly")
+	case "m", "monthly":
+		cond = cond.And("begin_time", n.BeginningOfMonth()).And("begin_name", "monthly")
+	case "y", "yearly":
+		cond = cond.And("begin_time", n.BeginningOfYear()).And("begin_name", "yearly")
+	case "d", "dayly":
+		fallthrough
+	default:
+		cond = cond.And("begin_time", n.BeginningOfDay()).And("begin_name", "dayly")
+	}
+
+	qs := orm.NewOrm().QueryTable("entry_ranking").
+		SetCond(cond).
+		Filter("entry", m.Id)
+
+	var ranking EntryRanking
+	err := qs.One(&ranking)
+	if err != nil {
+		return nil
+	}
+
+	return &ranking
 }
 
 // Is liveing entry?
