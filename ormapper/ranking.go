@@ -3,6 +3,8 @@ package ormapper
 import (
 	"database/sql"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type RankingBase struct {
@@ -34,4 +36,14 @@ type PictureRanking struct {
 
 	Picture   *Picture
 	PictureId sql.NullInt64
+}
+
+func EntryRankings() *gorm.DB {
+	return DB.Table("entry_ranking").
+		Preload("Entry").
+		Select("entry_ranking.*").
+		Joins(`
+		INNER JOIN entry ON entry.id = entry_ranking.entry_id 
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		`)
 }
