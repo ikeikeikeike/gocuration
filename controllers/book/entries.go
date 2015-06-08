@@ -141,7 +141,7 @@ func (c *EntriesController) Show() {
 		Preload("Picture").Preload("Video").Preload("Blog").
 		First(m)
 
-	if !m.IsLiving() || m.Blog.Mediatype != "image" {
+	if !m.IsLiving() || m.Blog.Mediatype != "image" || m.IsBan != "none" {
 		c.Ctx.Abort(404, "404")
 		return
 	}
@@ -212,7 +212,7 @@ func (c *EntriesController) Viewer() {
 		Preload("Picture").Preload("Video").Preload("Blog").
 		First(m)
 
-	if !m.IsLiving() {
+	if !m.IsLiving() || m.IsBan != "none" {
 		c.Ctx.Abort(404, "404")
 		return
 	}

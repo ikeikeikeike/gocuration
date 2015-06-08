@@ -30,8 +30,9 @@ type Entry struct {
 	Publisher   string    `orm:"size(255);null"    json:"publisher"` // RSSFeeder
 	PublishedAt time.Time `orm:"type(datetime);null;index" json:"publishedAt"`
 
-	IsPenalty bool  `orm:"default(0)"`
-	PageView  int64 `orm:"default(0);index"`
+	IsBan     string `orm:"default(none)" valid:"Required;Match(/^(none|soft|hard)$/)"`
+	IsPenalty bool   `orm:"default(0)"`
+	PageView  int64  `orm:"default(0);index"`
 
 	Q string `orm:"type(text);null" json:"-"` // Gin Index
 
