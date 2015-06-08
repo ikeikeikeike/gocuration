@@ -25,7 +25,7 @@ func (c *RankingsController) Dayly() {
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "dayly")
-	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfDay())
+	qs = qs.Filter("begin_time", c.GetParamatedNow().BeginningOfDay())
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -40,7 +40,7 @@ func (c *RankingsController) Weekly() {
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "weekly")
-	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfWeek())
+	qs = qs.Filter("begin_time", c.GetParamatedNow().BeginningOfWeek())
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -55,7 +55,7 @@ func (c *RankingsController) Monthly() {
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "monthly")
-	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfMonth())
+	qs = qs.Filter("begin_time", c.GetParamatedNow().BeginningOfMonth())
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
@@ -70,23 +70,11 @@ func (c *RankingsController) Yearly() {
 	qs := models.EntryRankings().RelatedSel()
 	qs = qs.Filter("rank__gt", 0)
 	qs = qs.Filter("begin_name", "yearly")
-	qs = qs.Filter("begin_time", c.getParamatedNow().BeginningOfYear())
+	qs = qs.Filter("begin_time", c.GetParamatedNow().BeginningOfYear())
 	qs = qs.Limit(100, 0)
 
 	var rankings []*models.EntryRanking
 	models.ListObjects(qs, &rankings)
 
 	c.Data["Rankings"] = rankings
-}
-
-func (c *RankingsController) getParamatedNow() *now.Now {
-	t := time.Now().UTC()
-	date := now.New(t)
-
-	if t, err := date.Parse(c.GetString("date")); err == nil {
-		date = now.New(t)
-	} else {
-		c.Data["Params"].(map[string]string)["date"] = date.Format("2006-01-02")
-	}
-	return date
 }

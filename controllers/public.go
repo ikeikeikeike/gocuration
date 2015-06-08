@@ -15,6 +15,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/ikeikeikeike/gopkg/accessctl"
 	"github.com/ikeikeikeike/gopkg/convert"
+	"github.com/jinzhu/now"
 )
 
 type PublicController struct {
@@ -179,4 +180,16 @@ func (c *PublicController) SetAdvancedSearch(qs orm.QuerySeter, prefix string) o
 	qs = c.SetPrefixLines(qs, prefix+"video__divas__diva__")
 	qs = c.SetAt(c.SetMt(c.SetQ(qs, prefix), prefix), prefix)
 	return qs
+}
+
+func (c *PublicController) GetParamatedNow() *now.Now {
+	t := time.Now().UTC()
+	date := now.New(t)
+
+	if t, err := date.Parse(c.GetString("date")); err == nil {
+		date = now.New(t)
+	} else {
+		c.Data["Params"].(map[string]string)["date"] = date.Format("2006-01-02")
+	}
+	return date
 }
