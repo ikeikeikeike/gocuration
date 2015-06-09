@@ -60,6 +60,32 @@ type VideoRanking struct {
 	VideoId sql.NullInt64
 }
 
+func (m *VideoRanking) PreviousRanking() *VideoRanking {
+	var prev VideoRanking
+	db := VideoRankings().
+		Where("video_ranking.id != ?", m.Id).
+		Where("video_ranking.begin_name = ?", m.BeginName).
+		Where("video_ranking.video_id = ?", m.Video.Id).
+		Order("video_ranking.begin_time DESC").
+		Limit(1).
+		First(&prev)
+
+	if db.Error != nil {
+		return nil
+	}
+
+	return &prev
+}
+
+func (m *VideoRanking) RankingsLoader() {
+	if m.Video != nil {
+		DB.Model(&m).
+			Preload("Entry").Preload("Site").
+			Related(&m.Video)
+		m.Video.RankingsLoader()
+	}
+}
+
 type PictureRanking struct {
 	RankingBase
 
@@ -112,5 +138,19 @@ func PictureRankings() *gorm.DB {
 		INNER JOIN entry ON entry.id = picture.entry_id
 		INNER JOIN blog ON blog.id = entry.blog_id 
 		LEFT OUTER JOIN anime ON anime.id = picture.anime_id
+		`)
+}
+
+func VideoRankings() *gorm.DB {
+	return DB.Table("video_ranking").
+		Preload("Video").
+		Select("video_ranking.*").
+		Joins(`
+		INNER JOIN video ON video.id = video_ranking.video_id 
+		INNER JOIN entry ON entry.id = video.entry_id
+		INNER JOIN blog ON blog.id = entry.blog_id 
+
+		LEFT OUTER JOIN entry_tag et ON et.entry_id = entry.id
+		LEFT OUTER JOIN tag ON tag.id = et.tag_id
 		`)
 }

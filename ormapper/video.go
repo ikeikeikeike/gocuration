@@ -69,6 +69,10 @@ func (m *Video) NewsLoader() {
 	}
 }
 
+func (m *Video) RankingsLoader() {
+	m.Entry.NewsLoader()
+}
+
 func (m *Video) ShowLoader() {
 	m.NewsLoader()
 }
