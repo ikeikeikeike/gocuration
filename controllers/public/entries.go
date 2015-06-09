@@ -93,7 +93,7 @@ func (c *EntriesController) Show() {
 	s := &models.Entry{Id: uid}
 	s.Read()
 
-	if !s.IsLiving() || s.IsBan != "none" {
+	if !s.IsLiving() || s.HasBan() {
 		c.Ctx.Abort(404, "404")
 		return
 	}

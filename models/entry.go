@@ -249,6 +249,15 @@ func (m *Entry) IsLiving() bool {
 	return true
 }
 
+func (m *Entry) HasBan() bool {
+	if m.IsBan == "none" {
+		return false
+	} else if m.IsBan == "" {
+		return false
+	}
+	return true
+}
+
 func (m *Entry) Insert() error {
 	if _, err := orm.NewOrm().Insert(m); err != nil {
 		return err

@@ -53,6 +53,15 @@ func (m *Entry) IsLiving() bool {
 	return true
 }
 
+func (m *Entry) HasBan() bool {
+	if m.IsBan == "none"{
+		return false
+	} else if m.IsBan == ""  {
+		return false
+	}
+	return true
+}
+
 func (m *Entry) GetByBlog() (*gorm.DB, error) {
 	if !m.IsLiving() {
 		return nil, nil
