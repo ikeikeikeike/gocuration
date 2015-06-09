@@ -19,9 +19,9 @@ func init() {
 	beego.Router(`/book/viewer:id([0-9]+)/:title(.*)?`, &book.EntriesController{}, "get:Viewer")
 
 	beego.Router("/ranking/dayly", &book.RankingsController{}, "get:Dayly")
-	// beego.Router("/ranking/weekly", &book.RankingsController{}, "get:Weekly")
-	// beego.Router("/ranking/monthly", &book.RankingsController{}, "get:Monthly")
-	// beego.Router("/ranking/yearly", &book.RankingsController{}, "get:Yearly")
+	beego.Router("/ranking/weekly", &book.RankingsController{}, "get:Weekly")
+	beego.Router("/ranking/monthly", &book.RankingsController{}, "get:Monthly")
+	beego.Router("/ranking/yearly", &book.RankingsController{}, "get:Yearly")
 
 	beego.Router("/search.html", &book.EntriesController{}, "get:Search")
 
