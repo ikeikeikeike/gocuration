@@ -3,6 +3,8 @@ package ormapper
 import (
 	"database/sql"
 	"time"
+
+	"github.com/jinzhu/now"
 )
 
 type Picture struct {
@@ -21,6 +23,36 @@ type Picture struct {
 
 	Images     []*Image
 	Characters []*Character `gorm:"many2many:picture_character;"`
+}
+
+func (m *Picture) TodayRanking(name string) *PictureRanking {
+
+	db := DB.
+		Preload("Entry").Preload("Anime").Preload("Images").
+		Select("picture_ranking.*").
+		Where("picture_id = ?", m.Id)
+
+	n := now.New(time.Now().UTC())
+
+	switch name {
+	case "w", "weekly":
+		db = db.Where("begin_time = ?", n.BeginningOfWeek()).Where("begin_name = ?", "weekly")
+	case "m", "monthly":
+		db = db.Where("begin_time = ?", n.BeginningOfMonth()).Where("begin_name = ?", "monthly")
+	case "y", "yearly":
+		db = db.Where("begin_time = ?", n.BeginningOfYear()).Where("begin_name = ?", "yearly")
+	case "d", "dayly":
+		fallthrough
+	default:
+		db = db.Where("begin_time = ?", n.BeginningOfDay()).Where("begin_name = ?", "dayly")
+	}
+
+	var ranking PictureRanking
+	if db.First(&ranking).Error != nil {
+		return nil
+	}
+
+	return &ranking
 }
 
 func (m *Picture) RelLoader() {

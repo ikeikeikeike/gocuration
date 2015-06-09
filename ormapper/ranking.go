@@ -65,7 +65,7 @@ func (m *VideoRanking) PreviousRanking() *VideoRanking {
 	db := VideoRankings().
 		Where("video_ranking.id != ?", m.Id).
 		Where("video_ranking.begin_name = ?", m.BeginName).
-		Where("video_ranking.video_id = ?", m.Video.Id).
+		Where("video_ranking.video_id = ?", m.VideoId.Int64).
 		Order("video_ranking.begin_time DESC").
 		Limit(1).
 		First(&prev)
@@ -98,7 +98,7 @@ func (m *PictureRanking) PreviousRanking() *PictureRanking {
 	db := PictureRankings().
 		Where("picture_ranking.id != ?", m.Id).
 		Where("picture_ranking.begin_name = ?", m.BeginName).
-		Where("picture_ranking.picture_id = ?", m.Picture.Id).
+		Where("picture_ranking.picture_id = ?", m.PictureId.Int64).
 		Order("picture_ranking.begin_time DESC").
 		Limit(1).
 		First(&prev)
