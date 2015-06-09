@@ -22,7 +22,10 @@ func init() {
 	beego.Router(`/blog/v:id([0-9]+)/`, &video.BlogsController{}, "get:Show")
 	beego.Router(`/blog/v:id([0-9]+)/:title(.*)?`, &video.BlogsController{}, "get:Show")
 
-	beego.Router("/ranking.html", &video.RankingsController{}, "get:Index")
+	beego.Router("/ranking/dayly", &video.RankingsController{}, "get:Dayly")
+	beego.Router("/ranking/weekly", &video.RankingsController{}, "get:Weekly")
+	beego.Router("/ranking/monthly", &video.RankingsController{}, "get:Monthly")
+	beego.Router("/ranking/yearly", &video.RankingsController{}, "get:Yearly")
 
 	beego.Router("/tags.html", &video.TagsController{}, "get:Index")
 	beego.Router(`/tag/:name`, &video.TagsController{}, "get:Show")
