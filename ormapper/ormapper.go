@@ -1,8 +1,6 @@
 package ormapper
 
 import (
-	"time"
-
 	"github.com/astaxie/beego"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
@@ -29,13 +27,6 @@ var BracupLines = map[string][]string{
 	"G": []string{"G"},
 	"H": []string{"H"},
 	"I": []string{"I", "J", "K", "L", "M", "N", "O", "P"},
-}
-
-type Model struct {
-	Id int64
-
-	Created time.Time
-	Updated time.Time
 }
 
 var DB gorm.DB

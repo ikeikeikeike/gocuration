@@ -56,6 +56,10 @@ func (m *Picture) NewsLoader() {
 	// DB.Model(&m).Find(&m.Characters)  // XXX: full scan
 }
 
+func (m *Picture) RankingsLoader() {
+	m.Entry.NewsLoader()
+}
+
 func (m *Picture) ShowLoader() {
 	m.NewsLoader()
 }
