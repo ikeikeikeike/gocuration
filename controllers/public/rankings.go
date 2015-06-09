@@ -1,11 +1,6 @@
 package public
 
-import (
-	"time"
-
-	"bitbucket.org/ikeikeikeike/antenna/models"
-	"github.com/jinzhu/now"
-)
+import "bitbucket.org/ikeikeikeike/antenna/models"
 
 // "github.com/k0kubun/pp"
 
