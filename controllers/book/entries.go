@@ -69,6 +69,19 @@ func (c *EntriesController) Home() {
 		Order("anime.pictures_count DESC").
 		Find(&animes)
 	c.Data["Animes"] = animes
+
+	var rankings []*ormapper.PictureRanking
+	ormapper.PictureRankings().
+		Where("picture_ranking.rank > ?", 0).
+		Where("picture_ranking.begin_name = ?", "dayly").
+		Where("picture_ranking.begin_time = ?", c.GetParamatedNow().BeginningOfDay()).
+		Limit(3).
+		Order("picture_ranking.rank ASC").
+		Find(&rankings)
+	for _, s := range rankings {
+		s.RankingsLoader()
+	}
+	c.Data["Rankings"] = rankings
 }
 
 func (c *EntriesController) News() {
