@@ -26,7 +26,7 @@ type Blog struct {
 	VerifyVideoRss  int `orm:"default(1);null" form:"VerifyVideoRss" valid:"Range(0,3)"`
 	VerifyVideoLink int `orm:"default(1);null" form:"VerifyVideoLink" valid:"Range(0,3)"`
 
-	IsBan string `orm:"default(none)" valid:"Match(/^(none|soft|hard)$/)"`
+	IsBan string `orm:"default(none)" valid:"Match(/^(|none|soft|hard)$/)"`
 	IsPenalty bool `orm:"default(0)"`
 
 	LastModified time.Time `orm:"type(datetime);null;index"`
