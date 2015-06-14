@@ -73,3 +73,17 @@ func (c *RankingsController) Yearly() {
 
 	c.Data["Rankings"] = rankings
 }
+
+func (c *RankingsController) Calendar() {
+	c.TplNames = "public/rankings/calendar.tpl"
+
+	qs := models.EntryRankings().RelatedSel()
+	qs = qs.Filter("rank", 1)
+	qs = qs.Filter("begin_name", "dayly")
+	qs = qs.Limit(100, 0)
+
+	var rankings []*models.EntryRanking
+	models.ListObjects(qs, &rankings)
+
+	c.Data["Rankings"] = rankings
+}
