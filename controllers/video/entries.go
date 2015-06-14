@@ -75,6 +75,19 @@ func (c *EntriesController) Home() {
 
 	var animes []*ormapper.Anime
 	c.Data["Animes"] = animes
+
+	var rankings []*ormapper.VideoRanking
+	ormapper.VideoRankings().
+		Where("video_ranking.rank > ?", 0).
+		Where("video_ranking.begin_name = ?", "dayly").
+		Where("video_ranking.begin_time = ?", c.GetParamatedNow().BeginningOfDay()).
+		Limit(3).
+		Order("video_ranking.rank ASC").
+		Find(&rankings)
+	for _, s := range rankings {
+		s.RankingsLoader()
+	}
+	c.Data["Rankings"] = rankings
 }
 
 func (c *EntriesController) News() {
@@ -151,7 +164,7 @@ func (c *EntriesController) Show() {
 		Preload("Picture").Preload("Video").Preload("Blog").
 		First(m)
 
-	if !m.IsLiving() || m.Blog.Mediatype != "movie" || m.HasBan()  {
+	if !m.IsLiving() || m.Blog.Mediatype != "movie" || m.HasBan() {
 		c.Ctx.Abort(404, "404")
 		return
 	}
