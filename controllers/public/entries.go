@@ -29,6 +29,7 @@ func (c *EntriesController) Home() {
 		animes    []*models.Anime
 		entries   []*models.Entry
 		summaries []*models.Summary
+		rankings  []*models.EntryRanking
 		pers      = c.DefaultPers
 	)
 
@@ -38,10 +39,18 @@ func (c *EntriesController) Home() {
 	c.SetAdvancedSearch(models.Entries().RelatedSel(), "").Limit(pers).All(&entries)
 	c.SetAdvancedSearch(models.Summaries().RelatedSel(), "entry__").RelatedSel().Limit(pers).All(&summaries)
 
+	models.EntryRankings().RelatedSel().
+		Filter("rank__gt", 0).
+		Filter("begin_name", "dayly").
+		Filter("begin_time", c.GetParamatedNow().BeginningOfDay()).
+		Limit(3, 0).
+		All(&rankings)
+
 	c.Data["Divas"] = divas
 	c.Data["Animes"] = animes
 	c.Data["Entries"] = entries
 	c.Data["Summaries"] = summaries
+	c.Data["Rankings"] = rankings
 }
 
 func (c *EntriesController) News() {
