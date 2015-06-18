@@ -49,3 +49,14 @@ func PictureAnimations() *gorm.DB {
 		`).
 		Group("anime.id")
 }
+
+func PictureAnimationsCount() *gorm.DB {
+	return DB.Table("anime").
+		Select("count(distinct anime.id) as cnt").
+		Joins(`
+		INNER JOIN picture ON picture.anime_id = anime.id 
+		INNER JOIN entry ON entry.id = picture.entry_id
+		INNER JOIN blog ON blog.id = entry.blog_id 
+		LEFT OUTER JOIN image ON image.id = anime.icon_id
+		`)
+}

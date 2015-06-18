@@ -31,7 +31,13 @@ func (c *AnimesController) Index() {
 		Limit(c.DefaultPers)
 
 	var count int64
-	db.Count(&count)
+	ormapper.PictureAnimationsCount().
+		Scopes(blog.FilterMediatype("image")).
+		Scopes(anime.PictureCountMoreThanZero).
+		Scopes(anime.FilterPrefixLines(c.GetString("line"))).
+		Scopes(anime.FilterNameKana(convert.StrTo(c.GetString("q")).MultiWord())).
+		Row().
+		Scan(&count)
 
 	pager := pagination.SetPaginator(c.Ctx, c.DefaultPers, count)
 	db = db.Limit(c.DefaultPers).Offset(pager.Offset())
