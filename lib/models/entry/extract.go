@@ -213,30 +213,38 @@ func (e *Extractor) Imgs() (imgs []*Img) {
 		return
 	}
 
-	var src string
+	var appendImg = func(src string) {
+		selector := fmt.Sprintf(`img[src*='%s']`, src)
+		e.doc.Find(selector).Each(func(i int, s *gq.Selection) {
+			src, ok := s.Attr("src")
+			if !ok {
+				return
+			}
+			alt, _ := s.Attr("alt")
+			if alt == "" {
+				alt, _ = s.Attr("title")
+			}
+			imgs = append(imgs, &Img{Src: src, Alt: alt})
+		})
+	}
+
 	domain := strings.Split(u.Host, ":")[0]
 
 	if strings.Contains(domain, "livedoor.jp") {
 		src = strings.Split(u.Path, "/")[1]
+		appendImg(src)
 	} else if strings.Contains(domain, "fc2.com") {
 		src = strings.Split(domain, ".")[0]
+		appendImg(src)
 	} else {
 		parts := strings.Split(domain, ".")
 		src = parts[len(parts)-2]
-	}
+		appendImg(src)
 
-	selector := fmt.Sprintf(`img[src*='%s']`, src)
-	e.doc.Find(selector).Each(func(i int, s *gq.Selection) {
-		src, ok := s.Attr("src")
-		if !ok {
-			return
+		if len(imgs) <= 0 {
+			appendImg("/wp-content/uploads/") // for wordpress
 		}
-		alt, _ := s.Attr("alt")
-		if alt == "" {
-			alt, _ = s.Attr("title")
-		}
-		imgs = append(imgs, &Img{Src: src, Alt: alt})
-	})
+	}
 
 	return
 }
