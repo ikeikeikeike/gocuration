@@ -228,6 +228,7 @@ func (e *Extractor) Imgs() (imgs []*Img) {
 		})
 	}
 
+	var src string
 	domain := strings.Split(u.Host, ":")[0]
 
 	if strings.Contains(domain, "livedoor.jp") {
