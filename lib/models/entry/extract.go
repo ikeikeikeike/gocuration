@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	textdistance "github.com/masatana/go-textdistance"
 	libm "bitbucket.org/ikeikeikeike/antenna/lib/models"
 	gq "github.com/PuerkitoBio/goquery"
 	behavior "github.com/ikeikeikeike/gopkg/net/http"
@@ -228,23 +229,44 @@ func (e *Extractor) Imgs() (imgs []*Img) {
 		})
 	}
 
-	var src string
+	var key string
 	domain := strings.Split(u.Host, ":")[0]
 
 	if strings.Contains(domain, "livedoor.jp") {
-		src = strings.Split(u.Path, "/")[1]
-		appendImg(src)
+		key = strings.Split(u.Path, "/")[1]
+		appendImg(key)
 	} else if strings.Contains(domain, "fc2.com") {
-		src = strings.Split(domain, ".")[0]
-		appendImg(src)
+		key = strings.Split(domain, ".")[0]
+		appendImg(key)
 	} else {
 		parts := strings.Split(domain, ".")
-		src = parts[len(parts)-2]
-		appendImg(src)
+		key = parts[len(parts)-2]
+		appendImg(key)
 
 		if len(imgs) <= 0 {
 			appendImg("/wp-content/uploads/") // for wordpress
 		}
+	}
+
+	// like a same key from levenshtein distance.
+	if len(imgs) <= 0 {
+		e.doc.Find("img").Each(func(i int, s *gq.Selection) {
+			src, ok := s.Attr("src")
+			if !ok {
+				return
+			}
+			alt, _ := s.Attr("alt")
+			if alt == "" {
+				alt, _ = s.Attr("title")
+			}
+
+			for _, term := range strings.Split(src, "/") {
+				if textdistance.LevenshteinDistance(key, term) < 10 {
+					imgs = append(imgs, &Img{Src: src, Alt: alt})
+					break
+				}
+			}
+		})
 	}
 
 	return
