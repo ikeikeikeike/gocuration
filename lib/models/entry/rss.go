@@ -2,10 +2,12 @@ package entry
 
 import (
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
 
+	"bitbucket.org/ikeikeikeike/antenna/lib/builder"
 	"bitbucket.org/ikeikeikeike/antenna/models"
 
 	"github.com/astaxie/beego"
@@ -69,6 +71,10 @@ func AddByItem(s *models.Entry, it *rss.Item, b *models.Blog) (int64, error) {
 		tf  = "2006-01-02T15:04:05-07:00"
 	)
 
+	fix := builder.NewFixable()
+	_ = fix.SetFilterByPath(
+		filepath.Join(beego.AppConfig.String("AppPath"), "conf/translate.yml"))
+
 	s.Blog = b
 	s.Url = it.Links[0].Href
 	s.Title = it.Title
@@ -83,8 +89,8 @@ func AddByItem(s *models.Entry, it *rss.Item, b *models.Blog) (int64, error) {
 	s.Content, _ = sani.HTMLAllowing(s.Content)
 	s.Content = sani.HTML(s.Content)
 
-	s.SeoTitle = s.Title
-	s.SeoContent = s.Content
+	s.SeoTitle = fix.Sentence(s.Title)
+	s.SeoContent = fix.Sentence(s.Content)
 
 	s.PublishedAt, _ = time.Parse(tf, it.Date)
 	if it.PubDate != "" {
@@ -108,9 +114,9 @@ func AddByItem(s *models.Entry, it *rss.Item, b *models.Blog) (int64, error) {
 		beego.Warn("Error add tags:", err)
 	}
 
-	paths, err := image.ExtractImagePaths(it.Encoded)
-	if err != nil {
-		beego.Warn("ExtractImagePaths:", err)
+	paths, _ := image.ExtractImagePaths(it.Encoded)
+	if len(paths) <= 0 {
+		paths, _ = image.ExtractImagePaths(it.Description)
 	}
 
 	if len(paths) > 0 {
