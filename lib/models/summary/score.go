@@ -9,14 +9,14 @@ import (
 )
 
 /*
-	Find entry 14 days ago and not pushed entry yet.
+	Find entry 10 days ago and not pushed entry yet.
 
 	The following is terminated ::
 
 		- Add thirty record to summary
 		- If stored 30 entities already, no register.
 		- 10,000 Loop.
-		- 7 days ago.
+		- 10 days ago.
 
 */
 func WeightingPushEntryBy(choices []randutil.Choice) {
@@ -26,7 +26,7 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 	i := 0
 	m := 0
 	o := orm.NewOrm()
-	t := time.Now().AddDate(0, 0, -5) // 7 days ago
+	t := time.Now().AddDate(0, 0, -10) // 10 days ago
 	sqs := models.Summaries()
 
 	// entry and summary one to one relation.

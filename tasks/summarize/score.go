@@ -75,7 +75,7 @@ func InScore() (err error) {
 	summary.WeightingPushEntryBy(choices)
 
 	// If more than five hundred, We remove from the old record.
-	max := int64(500)
+	max := int64(1000)
 	sqs := models.Summaries()
 
 	cnt, _ := sqs.Count()
