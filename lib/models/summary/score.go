@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"bitbucket.org/ikeikeikeike/antenna/models"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/jmcvetta/randutil"
 )
@@ -75,4 +76,40 @@ func WeightingPushEntryBy(choices []randutil.Choice) {
 			i++
 		}
 	}
+}
+
+/*
+	If more than five hundred, we remove from the old record.
+
+		Above a thouthand.
+
+*/
+func DeleteSummariesIfAlreadyAboveNumber() {
+
+	max := int64(1000)
+	sqs := models.Summaries()
+
+	cnt, _ := sqs.Count()
+	if max < cnt {
+		var summs []*models.Summary
+		sqs.OrderBy("created").Limit(cnt - max).All(&summs)
+		for _, s := range summs {
+			s.Delete()
+		}
+	}
+
+}
+
+/*
+	If already that summaries were old record in summary table
+	we remove it in that table.
+
+		That old time is from 1 month ago.
+
+*/
+func DeleteSummariesIfOld() {
+	t := time.Now().AddDate(0, -1, 0) // 1 month ago
+
+	num, err := models.Summaries().Filter("created__lte", t).Delete()
+	beego.Info("Delete old summaries: ", num, " records. err: ", err)
 }

@@ -74,18 +74,12 @@ func InScore() (err error) {
 	//
 	summary.WeightingPushEntryBy(choices)
 
-	// If more than five hundred, We remove from the old record.
-	max := int64(1000)
-	sqs := models.Summaries()
+	// If more than five hundred, we remove from the old record. 
+	summary.DeleteSummariesIfAlreadyAboveNumber()
 
-	cnt, _ := sqs.Count()
-	if max < cnt {
-		var summs []*models.Summary
-		sqs.OrderBy("created").Limit(cnt - max).All(&summs)
-		for _, s := range summs {
-			s.Delete()
-		}
-	}
+	// If already that summaries were old record in summary table
+	// we remove it in that table.
+	summary.DeleteSummariesIfOld()
 
 	// Random summaries
 	sql := fmt.Sprintf(`-- TODO: dialect random function

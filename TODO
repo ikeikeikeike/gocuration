@@ -1,0 +1,5 @@
+- I want to have blog checker about that is life or dead.
+- Broken puslished_at at rss.go:96.
+- summaryの不具合精査
+- 捨てているaccess logを精査する機構、redisに溜める < summaryについて
+- summaryの数に関係なくentryからランダムに2,3件抽出する機構 < summaryが1000件に満たない場合がある
